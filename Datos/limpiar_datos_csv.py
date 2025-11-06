@@ -30,7 +30,6 @@ nuevos_ids = list(range(1,len(new_df)+1))#Lista de 1 hasta la longitud del dataf
 new_df["ID"] = nuevos_ids
 new_df = new_df.reset_index(drop=True)#Reiniciar los index de las filas
 
-print(type(new_df.loc[0, "LineID"]))
 
 new_df.to_csv("Datos/Limpio/metro_stations_clean.csv", index=False)#Guardar el nuevo csv 
 
