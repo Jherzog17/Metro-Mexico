@@ -1,0 +1,184 @@
+Origen,Destino,Distancia,Linea
+Pantitlán,Zaragoza,1391.88994872059,1
+Zaragoza,Gómez Farías,724.9226592950536,1
+Gómez Farías,Boulevard Puerto Aéreo,1265.5125757937735,1
+Boulevard Puerto Aéreo,Balbuena,425.5450349614776,1
+Balbuena,Moctezuma,677.4858350034809,1
+Moctezuma,San Lázaro,809.4470433906556,1
+San Lázaro,Candelaria,1122.6455242663542,1
+Candelaria,Merced,936.4970444396963,1
+Merced,Pino Suárez,791.2065881264317,1
+Pino Suárez,Isabel la Católica,651.569910097677,1
+Isabel la Católica,Salto del Agua,412.6813263212291,1
+Salto del Agua,Balderas,574.8043461497302,1
+Balderas,Cuauhtémoc,579.9157868824564,1
+Cuauhtémoc,Insurgentes,1250.459438628512,1
+Insurgentes,Sevilla,526.6753778596599,1
+Sevilla,Chapultepec ,740.6552839255644,1
+Chapultepec ,Juanacatlán,1211.1469522777647,1
+Juanacatlán,Tacubaya,1131.935829964281,1
+Tacubaya,Observatorio,1439.679683236967,1
+Tasqueña,General Anaya,1423.657049324415,2
+General Anaya,Ermita,1157.7147408909557,2
+Ermita,Portales,725.7891153913685,2
+Portales,Nativitas,1246.1666712957804,2
+Nativitas,Villa de Cortés,728.2673248809256,2
+Villa de Cortés,Xola,1018.0993418456821,2
+Xola,Viaducto,468.05085687058374,2
+Viaducto,Chabacano,1094.8093833087437,2
+Chabacano,San Antonio Abad,592.5296728235619,2
+San Antonio Abad,Pino Suárez,1026.5195879831658,2
+Pino Suárez,Zócalo,1030.1228088857795,2
+Zócalo,Allende,559.5489050645741,2
+Allende,Bellas Artes,512.1832525014298,2
+Bellas Artes,Hidalgo,745.5948110977607,2
+Hidalgo,Revolución,628.6021192698076,2
+Revolución,San Cosme,895.3059957279484,2
+San Cosme,Normal,623.0305835773265,2
+Normal,Colegio Militar,736.6934630192457,2
+Colegio Militar,Popotla,486.03746236532686,2
+Popotla,Cuitláhuac,938.0853957515126,2
+Cuitláhuac,Tacuba,823.7383022326468,2
+Tacuba,Panteones,1483.3355956054647,2
+Panteones,Cuatro Caminos,1803.8004581402886,2
+Universidad,Copilco,1547.0634932577887,3
+Copilco,Miguel Ángel de Quevedo,1477.750546838016,3
+Miguel Ángel de Quevedo,Viveros y  Derechos Humanos,899.2343245040141,3
+Viveros y  Derechos Humanos,Coyoacán,1089.0519466813946,3
+Coyoacán,Zapata,1151.5611850214327,3
+Zapata,División del Norte,1202.7661004672,3
+División del Norte,Eugenia,599.9112275539392,3
+Eugenia,Etiopía y Plaza de la Transparencia,1245.086490868966,3
+Etiopía y Plaza de la Transparencia,Centro Médico,1136.768456334762,3
+Centro Médico,Hospital General,746.7190918719319,3
+Hospital General,Niños Héroes y  Poder Judicial CDMX,1033.080279520308,3
+Niños Héroes y  Poder Judicial CDMX,Balderas,734.3165952379445,3
+Balderas,Juárez,609.3730750321815,3
+Juárez,Hidalgo,590.2326775054094,3
+Hidalgo,Guerrero,819.4051638951094,3
+Guerrero,Tlatelolco,1046.080375342882,3
+Tlatelolco,La Raza,1938.830023556495,3
+La Raza,Potrero,1047.0044090970819,3
+Potrero,Deportivo 18 de Marzo,1114.963398247782,3
+Deportivo 18 de Marzo,Indios Verdes,1240.8833019262054,3
+Santa Anita,Jamaica,826.287763574403,4
+Jamaica,Fray Servando,1185.450121818054,4
+Fray Servando,Candelaria,940.6891979658938,4
+Candelaria,Morelos,1209.3355074426051,4
+Morelos,Canal del Norte,1060.7940206558258,4
+Canal del Norte,Consulado,1032.4322901703222,4
+Consulado,Bondojito,637.2163967632096,4
+Bondojito,Talismán,1266.7050442106265,4
+Talismán,Martín Carrera,1204.4826616023759,4
+Pantitlán,Hangares,1881.72649964016,5
+Hangares,Terminal Aérea,1309.9734250179506,5
+Terminal Aérea,Oceanía,1386.1235097005176,5
+Oceanía,Aragón,1139.4022601009624,5
+Aragón,Eduardo Molina,1180.9164837350195,5
+Eduardo Molina,Consulado,966.5470048836229,5
+Consulado,Valle Gómez,576.3901144692768,5
+Valle Gómez,Misterios,1268.467295688156,5
+Misterios,La Raza,1143.347751058122,5
+La Raza,Autobuses del Norte,1129.4895187561476,5
+Autobuses del Norte,Instituto del Petróleo,1046.8592805527092,5
+Instituto del Petróleo,Politécnico,1422.8732967839355,5
+Martín Carrera,La Villa y Basílica,1339.534678480296,6
+La Villa y Basílica,Deportivo 18 de Marzo,610.3862951306559,6
+Deportivo 18 de Marzo,Lindavista,1137.8851152272846,6
+Lindavista,Instituto del Petróleo,1285.1625381935899,6
+Instituto del Petróleo,Vallejo,791.5956079004429,6
+Vallejo,Norte 45,1246.294622788689,6
+Norte 45,Ferrería y Arena Ciudad de México,1198.6269496927214,6
+Ferrería y Arena Ciudad de México,UAM Azcapotzalco,1527.5010705931309,6
+UAM Azcapotzalco,Tezozómoc,1079.6800104153226,6
+Tezozómoc,El Rosario,1182.3035095339242,6
+Barranca del Muerto,Mixcoac,1138.6877727820772,7
+Mixcoac,San Antonio,1576.6081018151165,7
+San Antonio,San Pedro de los Pinos,594.8505323292936,7
+San Pedro de los Pinos,Tacubaya,1270.8664929182728,7
+Tacubaya,Constituyentes,1256.8622265823856,7
+Constituyentes,Auditorio,1771.488210717268,7
+Auditorio,Polanco,474.21112615434555,7
+Polanco,San Joaquín,1348.6058016532393,7
+San Joaquín,Tacuba,1826.5669702683465,7
+Tacuba,Refinería,899.617983264405,7
+Refinería,Camarones,2041.9643872679005,7
+Camarones,Aquiles Serdán,971.7666141123841,7
+Aquiles Serdán,El Rosario,1845.0947176519633,7
+Constitución de 1917,UAM-I,1424.3797281536486,8
+UAM-I,Cerro de la Estrella,1082.781552332134,8
+Cerro de la Estrella,Iztapalapa,951.7649658386839,8
+Iztapalapa,Atlalilco,781.5458631008077,8
+Atlalilco,Escuadrón 201,2221.732452118389,8
+Escuadrón 201,Aculco,794.6839257351163,8
+Aculco,Apatlaco,677.5950551850156,8
+Apatlaco,Iztacalco,864.289410343433,8
+Iztacalco,Coyuya,1343.3116126886844,8
+Coyuya,Santa Anita,929.5321217843813,8
+Santa Anita,La Viga,983.1624684473259,8
+La Viga,Chabacano,904.732594526863,8
+Chabacano,Obrera,1185.9251029678849,8
+Obrera,Doctores,1082.8122203541918,8
+Doctores,Salto del Agua,590.0493212362094,8
+Salto del Agua,San Juan de Letrán,248.49739140546487,8
+San Juan de Letrán,Bellas Artes,936.2794674740142,8
+Bellas Artes,Garibaldi y Lagunilla,714.8808714000538,8
+Pantitlán,Puebla,1615.1167459767055,9
+Puebla,Ciudad Deportiva,781.62753070068,9
+Ciudad Deportiva,Velódromo,1427.7906578277152,9
+Velódromo,Mixiuhca,967.4609852447817,9
+Mixiuhca,Jamaica,878.2344034181278,9
+Jamaica,Chabacano,1412.0641971979887,9
+Chabacano,Lázaro Cárdenas,1141.5579414632653,9
+Lázaro Cárdenas,Centro Médico,1183.440616834622,9
+Centro Médico,Chilpancingo,1319.8211941573143,9
+Chilpancingo,Patriotismo,939.5251342167657,9
+Patriotismo,Tacubaya,1281.761543553224,9
+La Paz,Los Reyes,2194.969509050957,A
+Los Reyes,Santa Marta,1755.8577235039215,A
+Santa Marta,Acatitla,1422.5640449846405,A
+Acatitla,Penón Viejo,1348.5094870560542,A
+Penón Viejo,Guelatao,2355.5794631288527,A
+Guelatao,Tepalcates,1312.7900679509557,A
+Tepalcates,Canal de San Juan,1619.6176024701194,A
+Canal de San Juan,Agrícola Oriental,1410.5572602181328,A
+Agrícola Oriental,Pantitlán,1464.8366784372038,A
+Buenavista,Guerrero,1315.9065757200908,B
+Guerrero,Garibaldi y Lagunilla,149.99688633900337,B
+Garibaldi y Lagunilla,Lagunilla,842.9571210550179,B
+Lagunilla,Tepito,736.399050364856,B
+Tepito,Morelos,663.1823421761328,B
+Morelos,San Lázaro,1243.4788425146514,B
+San Lázaro,Ricardo Flores Magón,1160.527756085647,B
+Ricardo Flores Magón,Romero Rubio,1116.676893507201,B
+Romero Rubio,Oceanía,815.8238551958084,B
+Oceanía,Deportivo Oceanía,1099.3043248321665,B
+Deportivo Oceanía,Bosque de Aragón,1226.752928585057,B
+Bosque de Aragón,Villa de Aragón,1114.2262125493974,B
+Villa de Aragón,Nezahualcóyotl,1471.3872095432816,B
+Nezahualcóyotl,Impulsora,1549.8222110187403,B
+Impulsora,Río de los Remedios,596.1025147370824,B
+Río de los Remedios,Múzquiz,1300.6682101582473,B
+Múzquiz,Ecatepec,1628.940734465463,B
+Ecatepec,Olímpica,745.6404751004205,B
+Olímpica,Plaza Aragón,858.9653993568305,B
+Plaza Aragón,Ciudad Azteca,631.4623466426982,B
+Tláhuac,Tlaltenco,1531.5522003134263,12
+Tlaltenco,Zapotitlán,1256.3976811634245,12
+Zapotitlán,Nopalera,1426.5758820704664,12
+Nopalera,Olivos,1510.2818539213565,12
+Olivos,Tezonco,639.9991457053907,12
+Tezonco,Periférico Oriente,1694.3766755242366,12
+Periférico Oriente,Calle 11,1262.5621464946053,12
+Calle 11,Lomas Estrella,1054.0291903408547,12
+Lomas Estrella,San Andrés Tomatlán,1208.4232074731149,12
+San Andrés Tomatlán,Culhuacán,1136.8057362372328,12
+Culhuacán,Atlalilco,1830.0459467089913,12
+Atlalilco,Mexicaltzingo,1883.4700498804086,12
+Mexicaltzingo,Ermita,1973.110718291713,12
+Ermita,Eje Central,1305.4066789623405,12
+Eje Central,Parque de los Venados,1332.1764353652213,12
+Parque de los Venados,Zapata,631.85047492151,12
+Zapata,Hospital 20 de Noviembre,785.8993988215775,12
+Hospital 20 de Noviembre,Insurgentes Sur,543.9952278841345,12
+Insurgentes Sur,Mixcoac,1021.633389980905,12

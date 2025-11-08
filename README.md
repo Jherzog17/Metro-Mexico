@@ -8,6 +8,9 @@ estaciones_separaciones.txt salido https://github.com/IgorEM/Melhor-Rota---Metro
 
 
 ## Sacar estaciones, tabla heurísticas y distancias reales
+
+### Sacar estaciones juntos otros datos
+
 Primero me he descargado un zip con todos los datos relevantes al tranporte en ciudad de mexico, https://www.transit.land/feeds/f-9g3-semovi
 
 Dentro de este zip hay varios archivos y prodeceré del siguiente modo:
@@ -18,19 +21,16 @@ Dentro de este zip hay varios archivos y prodeceré del siguiente modo:
 
 3.-Stop_times.txt: Aquí partiendo de los trip_id, saco los stop_id que son las estaciones de metro.
 
-4.-Stops.txt: Me quedo con los stops_id y ya tengo el csv solo con las paradas de metro, aqui tenog tambien sus coordenadas
+4.-Hay dos archivos, el archivo de stops.txt que contiene las estaciones con sus coordenadas y el archivo de shapes.txt que contiene una secuencia de puntos(o coordenadas)que equivalen al recorrido exacto del metro. El problema, la única forma de relacionar ambos archivos es mediante coordenadas y no coinciden excactamente, por lo que hay un problema. Antes de seguri, ¿por que esto es necesario?. Bueno con el archivo de shapes.txt yo puedo sacar el recorrido exacto de un extremo a otro extremo, sin embargo no se donde se situan las paradas y sin las paradas, no puedo sacar la distancia entre paradas(los pesos del grafo). Solución: relacionar ambos csv como se pueda. Lo que he hecho es buscar los puntos más cercanos dentro de shapes con respecto a las estaciones(archivo de stops.txt). Posteriormente, tomar como valor real de ubicación de la parada de metro esa coordenada más similar a la real dentro de shape. Esto, no es la ubicación excta de la parada de metro, pero es una ubicación muy  cercana(el error es bajo), y es la única manera que se me ha ocurrido de unir por así decirlo ambos csv.
 
-5.- Una vez que tengo las estaciones, las estaciones que tienen varias lineas aparecenb varias veces por lo que las he fusionado en una sola fila. Por último he guardado el csv en estaciones_limpias.csv. 
+5.-A partir de esas nuevas coordenadas y más info como la línea a la que pertenece, la secuencia(en shapes) y el id que lo identifica en shapes, he creado el csv con todas las estaciones(estaciones_limpias.csv)
 
-## Tabla de las heurísticas a partir de las estaciones
-Luego he creado la tabla de las heurísticas a partir del csv limpio. En esa tabla cada fila, es una estación y cada columna es una estación. Los valores de la tabla son las distancia en línea recta de un lugar a otro, esto luego se puede utilizar en el algoritmo A*. Para hallar la distancia en linea recta partía de coordenadas asi que he utlizado la librería geopy para ello utilizando la función geodesic, que es mucho más precisa que utilizar la funcion haversiana o como se diga. He guardado la tabla en un csv pero es **MUY IMPORTANTE que al importar la tabla de heuristicas hacerlo con esta opcion pd.read_csv("Ruta", index_col="Unnamed: 0"), esto es lo importante: index_col="Unnamed: 0"**
 
-## Para las rutas exactas
 
-1.- Partiendo de del los trips_id, estos tienen asociado un shape_id en el archivo trips.txt
+### Tabla de las heurísticas a partir de las estaciones
+A partir de estaciones_limpias.csv, he creado un script que saca un dataframe con las distancias en línea recta de una estación a otra, es decir, las heurísticas. Para crear este script primero he creado un data frame con las dimensiones necesarias(creo que 163x163) con valores por defecto(0.0), para luego ir fila por fila y columna por columna sustituyendo el valor por la distancia. Para calcular la distancia he utilizado una librería llamada geopy, utilizando su función geodisic que a partir de dos puntos te saca la distancia en metros, bueno la saca en km creo pero yo las he puesto en metros. He guardado la tabla en un csv pero es **MUY IMPORTANTE que al importar la tabla de heuristicas hacerlo con esta opción pd.read_csv("Ruta", index_col="Unnamed: 0"), esto es lo importante: index_col="Unnamed: 0"**. Esto es pq los index del dataset son los nombres de las estaciones y al guardarlo a csv, esos index pasan a ser una columna,  y por tanto, al abrirlo hay que especificar que quieres que esa primera columna sean los indices
 
-2.- Partiendo de estos shape_id puedo sacar la ruta exacta
-
-Los shapes copntienen la ruta excta de un extremo de la linea al otro extremo, es por ello que lo que he hecho es primero dividir las estaciones por linea y los shapes tambié por línea. Luego encontrar la coordenada más parecida del shape con la estación correspondiente y tomarla como punto de incio. Hacer lo mismo con la estación destino y calcular la distancia entre ambas
+### Distancias reales
+En este apartado, he sacado la distancia real(pesos del grafo), entre dos estaciones contiguas. Para ello he partido de los csv que hay en las carpetas Limpio/Estaciones y Limpio/Shapes, aquí se encuentran los datos de cada estación individual y la ruta excta de cada estación individual. Para lograr esto primero he identificado el conjunto de puntos que conforman la ruta entre una estación y otra. Por ejemplo, si tengo 200 puntos que conforman la línea entera(de extremo a extremo), de la estación 1 a la 2 quiza coge 15 puntos, de la 2 a la 3, 20 puntos, etc. Una vez tengo esos datos calculo la distancia entre un punto y su contiguo y asi sucesivamente. Voy acumulando esos valores y me da la distancia entre una estación y otra. Posteriormente guardo todos los datos en el csv de distancias_reales.csv
 
 

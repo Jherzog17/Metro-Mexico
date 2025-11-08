@@ -1,7 +1,7 @@
 import pandas as pd
 from geopy.distance import geodesic
 
-df = pd.read_csv("Datos/Limpio/estaciones_limpias_new_coords.csv")
+df = pd.read_csv("Datos/Limpio/estaciones_limpias.csv")
 
 #Creo el dataframe donde voy a guardar todos los datos
 estaciones = {}
