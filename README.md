@@ -29,6 +29,8 @@ Luego he creado la tabla de las heurísticas a partir del csv limpio. En esa tab
 
 1.- Partiendo de del los trips_id, estos tienen asociado un shape_id en el archivo trips.txt
 
-1.- Partiendo de estos shape_id puedo sacar la ruta exacta
+2.- Partiendo de estos shape_id puedo sacar la ruta exacta
+
+Los shapes copntienen la ruta excta de un extremo de la linea al otro extremo, es por ello que lo que he hecho es primero dividir las estaciones por linea y los shapes tambié por línea. Luego encontrar la coordenada más parecida del shape con la estación correspondiente y tomarla como punto de incio. Hacer lo mismo con la estación destino y calcular la distancia entre ambas
 
 
