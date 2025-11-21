@@ -33,4 +33,28 @@ A partir de estaciones_limpias.csv, he creado un script que saca un dataframe co
 ### Distancias reales
 En este apartado, he sacado la distancia real(pesos del grafo), entre dos estaciones contiguas. Para ello he partido de los csv que hay en las carpetas Limpio/Estaciones y Limpio/Shapes, aquí se encuentran los datos de cada estación individual y la ruta excta de cada estación individual. Para lograr esto primero he identificado el conjunto de puntos que conforman la ruta entre una estación y otra. Por ejemplo, si tengo 200 puntos que conforman la línea entera(de extremo a extremo), de la estación 1 a la 2 quiza coge 15 puntos, de la 2 a la 3, 20 puntos, etc. Una vez tengo esos datos calculo la distancia entre un punto y su contiguo y asi sucesivamente. Voy acumulando esos valores y me da la distancia entre una estación y otra. Posteriormente guardo todos los datos en el csv de distancias_reales.csv
 
+## Sacar distancia y tiempos de transbordos
 
+Datos obtenidos de https://www.adn40.mx/ciudad/2025-10-13/lista-los-transbordos-del-metro-cdmx-y-cuanto-miden
+
+-Pantitlan: 602 metros, 14 minutos L1 a LA
+
+-Pantitlan: 430 metros, 10 minutos L5 a LA
+
+-La raza: 600m, 9 mins, L3 a L5
+
+-Atlalilco: 881 metros, 20 minutos L8 a L12
+
+-Ermita: 585 metros, 14 minutos L2 a L12
+
+-Jamaica: 384 m, 9 min
+
+-Chabacano: 375 m, 9 min
+
+-Candelaria: 353 m, 8 min
+
+-La raza: 600m , L3 y L5
+
+-Hidalgo, Chabacano, Bellas Artes, Deportivo 18 de Marzo: 3 minutos
+
+-El Rosario (L6 ↔ L7): 1 min
