@@ -38,8 +38,16 @@ En este apartado, he sacado la distancia real(pesos del grafo), entre dos estaci
 Datos obtenidos de https://www.adn40.mx/ciudad/2025-10-13/lista-los-transbordos-del-metro-cdmx-y-cuanto-miden
 
 -Atlalilco: 881 metros, 20 minutos L8 a L12
+
 -Pantitlan: 602 metros, 14 minutos L1 a LA
+
 -Ermita: 585 metros, 14 minutos L2 a L12
+
 -Jamaica: 384 m, 9 min
+
 -Chabacano: 375 m, 9 min
+
 -Candelaria: 353 m, 8 min
+
+-La raza: 600m , L3 y L5
+
