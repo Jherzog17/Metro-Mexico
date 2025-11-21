@@ -37,9 +37,13 @@ En este apartado, he sacado la distancia real(pesos del grafo), entre dos estaci
 
 Datos obtenidos de https://www.adn40.mx/ciudad/2025-10-13/lista-los-transbordos-del-metro-cdmx-y-cuanto-miden
 
--Atlalilco: 881 metros, 20 minutos L8 a L12
-
 -Pantitlan: 602 metros, 14 minutos L1 a LA
+
+-Pantitlan: 430 metros, 10 minutos L5 a LA
+
+-La raza: 600m, 9 mins, L3 a L5
+
+-Atlalilco: 881 metros, 20 minutos L8 a L12
 
 -Ermita: 585 metros, 14 minutos L2 a L12
 
@@ -51,3 +55,6 @@ Datos obtenidos de https://www.adn40.mx/ciudad/2025-10-13/lista-los-transbordos-
 
 -La raza: 600m , L3 y L5
 
+-Hidalgo, Chabacano, Bellas Artes, Deportivo 18 de Marzo: 3 minutos
+
+-El Rosario (L6 ↔ L7): 1 min
