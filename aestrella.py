@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from networkx.algorithms.shortest_paths.astar import astar_path, astar_path_length
 
-heuristicas=pd.read_csv('tabla_heuristicas.csv', index_col=0)
+heuristicas=pd.read_csv('Datos/Limpio/tabla_heuristicas.csv', index_col=0)
 G_mexico = nx.Graph()
 #Conexiones linea 1
 G_mexico.add_edge("Observatorio_L1", "Tacubaya_L1", weight=5)
@@ -74,7 +74,8 @@ print(heuristica_mexico("Observatorio", "Eje Central"))
 def trayecto_optimo_distancia(origen, destino):
     camino=nx.astar_path(G_mexico, origen, destino, heuristic=heuristica_mexico, weight="weight")
     dist_total=nx.astar_path_length(G_mexico, origen, destino, heuristic=heuristica_mexico, weight="weight")
-    return f"El camino encontrado por A*:{camino}\nDistancia total: {dist_total}"
+    return camino, dist_total
 
-print(trayecto_optimo_distancia("Observatorio_L1", "Eje Central_L12"))
+ruta, distancia = trayecto_optimo_distancia("Observatorio_L1", "Eje Central_L12")
+print(f"El camino encontrado por A*:{ruta}\nDistancia total: {distancia}")
 
