@@ -39,7 +39,7 @@ def heuristica_mexico(current, target):
         return float(heuristicas.at[current_bien, target_bien])
     else:
         return 0.0
-    
+
 #prueba para comprobar que se calculan bien las heurísticas
 print(heuristica_mexico("Observatorio", "Eje Central"))
 
@@ -59,3 +59,13 @@ def trayecto_optimo_distancia(origen, destino):
 #prueba para comprobar A*
 print(trayecto_optimo_distancia("Observatorio_L1", "Eje Central_L12"))
 
+def convertir_distancia_a_tiempo(distancia_metros):
+    """
+    Esta función recibe una distancia total en metros, y pasa
+    la velocidad media del tren(35km/h), teniendo en cuenta
+    paradas, posibles retrasos... a m/s, y calcula el tiempo
+    en minutos que se tardaría en recorrer dicha distancia
+    """
+    velocidad_ms=35*1000/3600
+    tiempo=(distancia_metros/velocidad_ms)/60
+    return tiempo
