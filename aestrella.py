@@ -43,7 +43,21 @@ def heuristica_mexico(current, target):
 #prueba para comprobar que se calculan bien las heurísticas
 print(heuristica_mexico("Observatorio", "Eje Central"))
 
-#====================FUNCION QUE EJECUTA A*====================
+def convertir_distancia_a_tiempo(distancia_metros):
+    """
+    Esta función recibe una distancia total en metros, y pasa
+    la velocidad media del tren(35km/h), teniendo en cuenta
+    paradas, posibles retrasos... a m/s, y calcula el tiempo
+    en minutos que se tardaría en recorrer dicha distancia
+    """
+    velocidad_ms=35*1000/3600
+    tiempo=(distancia_metros/velocidad_ms)
+    minutos = int(tiempo // 60)
+    segundos = tiempo % 60
+    return str(minutos) + " mins " + str(round(segundos)) + " segs"
+
+
+#Función que ejecuta A*
 def trayecto_optimo_distancia(origen, destino):
     """
        Ejecuta el algoritmo A* sobre el grafo del metro.
@@ -54,18 +68,14 @@ def trayecto_optimo_distancia(origen, destino):
     camino=nx.astar_path(G_mexico, origen, destino, heuristic=heuristica_mexico, weight="weight")
     # Importante: astar_path_length devuelve g(n), no g(n)+h(n).
     dist_total=nx.astar_path_length(G_mexico, origen, destino, heuristic=heuristica_mexico, weight="weight")
-    return f"El camino encontrado por A*:{camino}\nDistancia total: {dist_total}"
+    tiempo = convertir_distancia_a_tiempo(dist_total)
+    resultado = {
+        "ruta":camino,
+        "distancia":dist_total,
+        "tiempo":tiempo
+    }
+    return resultado
 
 #prueba para comprobar A*
 print(trayecto_optimo_distancia("Observatorio_L1", "Eje Central_L12"))
 
-def convertir_distancia_a_tiempo(distancia_metros):
-    """
-    Esta función recibe una distancia total en metros, y pasa
-    la velocidad media del tren(35km/h), teniendo en cuenta
-    paradas, posibles retrasos... a m/s, y calcula el tiempo
-    en minutos que se tardaría en recorrer dicha distancia
-    """
-    velocidad_ms=35*1000/3600
-    tiempo=(distancia_metros/velocidad_ms)/60
-    return tiempo
