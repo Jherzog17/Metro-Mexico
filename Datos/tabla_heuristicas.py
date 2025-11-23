@@ -1,7 +1,11 @@
 import pandas as pd
 from geopy.distance import geodesic
+from pathlib import Path
 
-df = pd.read_csv("Datos/Limpio/estaciones_limpias.csv")
+# Obtener la ruta raíz del proyecto
+directorio_root = Path(__file__).parent.parent
+
+df = pd.read_csv(directorio_root / "Datos/Limpio/estaciones_limpias.csv")
 
 #Creo el dataframe donde voy a guardar todos los datos
 estaciones = {}
@@ -20,4 +24,4 @@ for inx_origen in df.index:
         linea_recta = geodesic(origen, destino)#Función que da la distancia en línea recta entre coordenadas
         tabla_heuristicas.loc[df.loc[inx_origen, "Nombre_Estacion"],df.loc[inx_dest, "Nombre_Estacion"]] = linea_recta.meters #Añadir a la tabla
 
-tabla_heuristicas.to_csv("Datos/Limpio/tabla_heuristicas.csv")#Guardar la tabla con las heurísticas
+tabla_heuristicas.to_csv(directorio_root / "Datos/Limpio/tabla_heuristicas.csv")#Guardar la tabla con las heurísticas

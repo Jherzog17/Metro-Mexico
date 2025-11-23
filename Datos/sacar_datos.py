@@ -3,13 +3,17 @@ import re
 import copy
 from geopy.distance import geodesic
 import numpy as np
+from pathlib import Path
+
+# Obtener la ruta raíz del proyecto
+directorio_root = Path(__file__).parent.parent
 
 '''
 Cargar csv de rutas en el cual se encuentra una columna que identifica los
 distintos medios de transporte (metro, trolebus, etc). Filtrar por filas para
 quedarme solo con que sean de metro
 '''
-routes = pd.read_csv("Datos/Crudo/f-9g3-semovi-latest/routes.txt")
+routes = pd.read_csv(directorio_root / "Datos/Crudo/f-9g3-semovi-latest/routes.txt")
 
 routes = routes[routes["agency_id"] == "METRO"]#Filtrar por las filas que contengan sean metro
 route_id = routes["route_id"].tolist() #Sacar las route_id que usaremos a continuación
@@ -19,7 +23,7 @@ Cargar el csv de trips en el cual se encuentran los trips_id que servirán
 para sacar luego las estaciones de metro y también para sacar los shape_id
 que nos darán el camino exacto entre estaciones
 '''
-trips = pd.read_csv("Datos/Crudo/f-9g3-semovi-latest/trips.txt")
+trips = pd.read_csv(directorio_root / "Datos/Crudo/f-9g3-semovi-latest/trips.txt")
 trips = trips[trips["route_id"].isin(route_id)]
 trips = trips[trips["direction_id"] == 0]
 
@@ -38,13 +42,13 @@ Cargar el csv de stop_times en el cual se encuentran los ids de las
 estaciones que luego filtraremos en el csv de stops
 '''
 
-stops_times = pd.read_csv("Datos/Crudo/f-9g3-semovi-latest/stop_times.txt")
+stops_times = pd.read_csv(directorio_root / "Datos/Crudo/f-9g3-semovi-latest/stop_times.txt")
 stops_times = stops_times[stops_times["trip_id"].isin(trips_id)]
 stops_id = stops_times["stop_id"].tolist()  
 
 
 #Csv con las paradas
-stops = pd.read_csv("Datos/Crudo/f-9g3-semovi-latest/stops.txt")
+stops = pd.read_csv(directorio_root / "Datos/Crudo/f-9g3-semovi-latest/stops.txt")
 stops = stops[stops["stop_id"].isin(stops_id)]
 
 '''
@@ -56,7 +60,7 @@ entre estaciones
 lineas = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "12"]
 
 #Csv que contiene los recorridos exactos de las líneas
-shapes = pd.read_csv("Datos/Crudo/f-9g3-semovi-latest/shapes.txt")
+shapes = pd.read_csv(directorio_root / "Datos/Crudo/f-9g3-semovi-latest/shapes.txt")
 shapes = shapes[shapes["shape_id"].isin(shape_id)]
 
 #Dividir los recorridos por líneade metro
@@ -75,7 +79,7 @@ del lista_shapes[12]
 
 #Guardo las distintas rutas en distintos csv para luego poder ir ruta por ruta
 for i in range(len(lista_shapes)):
-    lista_shapes[i].to_csv(f"Datos/Limpio/Shapes/shape_linea_{lineas[i]}.csv", index=False)
+    lista_shapes[i].to_csv(directorio_root / f"Datos/Limpio/Shapes/shape_linea_{lineas[i]}.csv", index=False)
 
 #Dividir las estaciones por linea de metro
 estaciones_por_linea = []
@@ -141,7 +145,7 @@ for i in range(len(estaciones_por_linea)):
     nombre_y_coords = encontrar_coordenada_mas_cercana(estacion, coords)#df que devuelve las estaciones con las coordenadas de shape más parecidas a la de la estación
     nombre_y_coords["Linea"] = linea #Añado la linea al df
 
-    nombre_y_coords.to_csv(f"Datos/Limpio/Estaciones/estacion_{linea[0]}.csv", index=False)#Guardo la info de la línea
+    nombre_y_coords.to_csv(directorio_root / f"Datos/Limpio/Estaciones/estacion_{linea[0]}.csv", index=False)#Guardo la info de la línea
     stops_df_new_coords = pd.concat([stops_df_new_coords, nombre_y_coords])#Lo unifico para tener en otro df todas las estaciones(el df de estaciones limpias)
 
 stops_df_new_coords = stops_df_new_coords.reset_index(drop=True)#Ya que cada uno tenían sus índices, los reinicio para que se asignen nuevos
@@ -196,5 +200,5 @@ def unificar_estaciones_repetidas(stops_df_new_coords):
     return new_stops_df_new_coords
     
 new_stops_df_new_coords = unificar_estaciones_repetidas(stops_df_new_coords)
-new_stops_df_new_coords.to_csv("Datos/Limpio/estaciones_limpias.csv", index=False)#Guardar el csv con todas las estaciones limpias
+new_stops_df_new_coords.to_csv(directorio_root / "Datos/Limpio/estaciones_limpias.csv", index=False)#Guardar el csv con todas las estaciones limpias
 

@@ -5,7 +5,7 @@ from typing import Callable, Dict, List, Tuple, Optional
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import QPointF, Qt
 from PySide6.QtGui import QPolygonF, QBrush, QColor, QPen, QPainter
-import metro_backend
+from metro_data import cargar_datos, calcular_ruta
 
 
 # --- CONFIGURACIÓN DE ESTILO (CSS) ---
@@ -366,41 +366,52 @@ class MainWindow(QtWidgets.QMainWindow):
     def _handle_route_requested(self, origen: str, destino: str):
         if not self._route_finder:
             return
-        path = self._route_finder(origen, destino)
-        if not path:
+        result = self._route_finder(origen, destino)
+        if not result:
             self.lbl_resumen.setText("⚠ No hay ruta disponible.")
             return
 
+        # result is now just a list of station names
+        path = result
+        
         self.steps_list.clear()
         for i, stationid in enumerate(path):
             # Icono bonito en la lista
             item = QtWidgets.QListWidgetItem(f"{i + 1}. {stationid}")
             self.steps_list.addItem(item)
 
-        self.lbl_resumen.setText(f"✔ Ruta calculada: {len(path) - 1} transbordos")
+        # Calculate number of stations (not transfers)
+        num_stations = len(path) - 1
+        self.lbl_resumen.setText(f"✔ Ruta calculada: {num_stations} estaciones")
         self.map.draw_network(self.stations_xy, self.edges)
         self.map.draw_route(self.stations_xy, path)
 
 
-# --------- DATOS DUMMY PARA PROBAR ---------
-def dummy_loader():
-    # Generamos una forma más interesante (tipo red real)
-    stations = ["Polanco", "Auditorio", "Tacubaya", "Centro Medico", "Chabacano", "Jamaica", "Pantitlan"]
-    stations_xy = {
-        "Polanco": (50, 50), "Auditorio": (100, 80), "Tacubaya": (120, 150),
-        "Centro Medico": (200, 150), "Chabacano": (280, 120),
-        "Jamaica": (350, 120), "Pantitlan": (450, 100)
-    }
-    edges = [
-        ("Polanco", "Auditorio"), ("Auditorio", "Tacubaya"), ("Tacubaya", "Centro Medico"),
-        ("Centro Medico", "Chabacano"), ("Chabacano", "Jamaica"), ("Jamaica", "Pantitlan")
-    ]
-    return stations, stations_xy, edges
+# --------- VARIABLES GLOBALES PARA DATOS DEL METRO ---------
+# Se cargarán al iniciar la aplicación
+stations_list = []
+stations_xy = {}
+edges_list = []
+graph = None
+heuristics_df = None
+station_mapping = {}
+reverse_mapping = {}
 
 
-def dummy_route_finder(o, d):
-    # Simula ruta simple
-    return ["Polanco", "Auditorio", "Tacubaya"]
+def load_metro_data():
+    """Carga los datos del metro desde los CSV."""
+    global stations_list, stations_xy, edges_list, graph, heuristics_df, station_mapping, reverse_mapping
+    
+    stations_list, stations_xy, edges_list, graph, heuristics_df, station_mapping, reverse_mapping = cargar_datos()
+    
+    return stations_list, stations_xy, edges_list
+
+
+def find_metro_route(origen, destino):
+    """Calcula la ruta óptima entre dos estaciones."""
+    global graph, station_mapping, reverse_mapping, heuristics_df
+    
+    return calcular_ruta(origen, destino, graph, station_mapping, reverse_mapping, heuristics_df)
 
 
 def main():
@@ -412,14 +423,10 @@ def main():
 
     win = MainWindow()
 
-    # --- AQUÍ ESTÁ EL CAMBIO ---
-    # Antes ponía: win.set_data_loader(dummy_loader)
-    # AHORA DEBE PONER:
-    win.set_data_loader(metro_backend.metro_system.load_data)
-
-    # Antes ponía: win.set_route_finder(dummy_route_finder)
-    # AHORA DEBE PONER:
-    win.set_route_finder(metro_backend.metro_system.find_path_astar)
+    # --- CONFIGURACIÓN DEL SISTEMA ---
+    # Usar funciones simples para cargar datos y calcular rutas
+    win.set_data_loader(load_metro_data)
+    win.set_route_finder(find_metro_route)
     # --------------------------
 
     win.show()

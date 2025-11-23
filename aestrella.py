@@ -2,15 +2,19 @@ import networkx as nx
 #import matplotlib.pyplot as plt
 import pandas as pd
 from networkx.algorithms.shortest_paths.astar import astar_path, astar_path_length
+from pathlib import Path
 
 #CARGAMOS LOS DATOS
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Obtener la ruta base del proyecto
+directorio_root = Path(__file__).parent / "Datos" / "Limpio"
+
 #La tabla de heurísticas, tiene como índice los nombres de las estaciones
-heuristicas=pd.read_csv('Datos/Limpio/tabla_heuristicas.csv', index_col=0)
+heuristicas=pd.read_csv(directorio_root / 'tabla_heuristicas.csv', index_col=0)
 #El archivo de conexiones del metro, que contiene: estaciones origen, destino,
 #distancia real entre ambas, linea a la que pertenece
 #IMPORTANTE, en este archivo estan incluidos los transbordos
-distancias=pd.read_csv('Datos/Limpio/distancias_reales_transbordos.csv')
+distancias=pd.read_csv(directorio_root / 'distancias_reales_transbordos.csv')
 #----------------------------------------------------------------------------------------------------------------------------------------------------
 #INICIALIZACIÓN EL GRAFO
 G_mexico = nx.Graph()
@@ -40,8 +44,8 @@ def heuristica_mexico(current, target):
     else:
         return 0.0
 
-#prueba para comprobar que se calculan bien las heurísticas
-print(heuristica_mexico("Observatorio", "Eje Central"))
+# prueba para comprobar que se calculan bien las heurísticas
+# print(heuristica_mexico("Observatorio", "Eje Central"))
 
 def convertir_distancia_a_tiempo(distancia_metros):
     """
@@ -76,6 +80,6 @@ def trayecto_optimo_distancia(origen, destino):
     }
     return resultado
 
-#prueba para comprobar A*
-print(trayecto_optimo_distancia("Observatorio_L1", "Eje Central_L12"))
+# prueba para comprobar A*
+# print(trayecto_optimo_distancia("Observatorio_L1", "Eje Central_L12"))
 

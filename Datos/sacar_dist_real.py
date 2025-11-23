@@ -1,6 +1,10 @@
 import pandas as pd
 from geopy.distance import geodesic
 import numpy as np
+from pathlib import Path
+
+# Obtener la ruta raíz del proyecto
+directorio_root = Path(__file__).parent.parent
 
 posibles_estaciones = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "12"]
 
@@ -16,8 +20,8 @@ distancia entre un punto de shape y su contiguo y sumandolos asi hasta encontrar
 una estación de metro
 '''
 for lin in posibles_estaciones:
-    estacion = pd.read_csv(f"Datos/Limpio/Estaciones/estacion_{lin}.csv")
-    shape = pd.read_csv(f"Datos/Limpio/Shapes/shape_linea_{lin}.csv")
+    estacion = pd.read_csv(directorio_root / f"Datos/Limpio/Estaciones/estacion_{lin}.csv")
+    shape = pd.read_csv(directorio_root / f"Datos/Limpio/Shapes/shape_linea_{lin}.csv")
     
     #Coge solámente los datos de la línea correspondiente
     for i in range(len(estacion)-1):
@@ -52,7 +56,7 @@ datos = {"Origen": origen, "Destino": destino, "Distancia": dist, "Linea":linea}
 df_dist_real = pd.DataFrame(datos)#Data frame final
 
 # Guardar el archivo original sin transbordos
-df_dist_real.to_csv("Datos/Limpio/distancias_reales.csv", index=False)
+df_dist_real.to_csv(directorio_root / "Datos/Limpio/distancias_reales.csv", index=False)
 
 #Obtener transbordos
 
@@ -109,7 +113,7 @@ df_transbordos = pd.DataFrame({
 df_dist_real_transbordos = pd.concat([df_dist_real, df_transbordos], ignore_index=True)
 
 # Guardar el archivo con transbordos
-df_dist_real_transbordos.to_csv("Datos/Limpio/distancias_reales_transbordos.csv", index=False)
+df_dist_real_transbordos.to_csv(directorio_root / "Datos/Limpio/distancias_reales_transbordos.csv", index=False)
 
 #--------Para hacer Raul---------------
 #Añadir las distancias a entre los distintos transbordos
