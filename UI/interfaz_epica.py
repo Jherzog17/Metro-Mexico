@@ -49,11 +49,51 @@ QComboBox {
     border: 1px solid #0d1518;
     border-radius: 5px;
     padding: 5px;
+       
 }
+
+QComboBox QAbstractItemView {
+    background-color: #1B2A30;   /* El color de fondo de la lista */
+    color: #E0E0E0;              /* El color del texto de las opciones */
+    selection-background-color: #B06821; /* El color naranja cuando pasas el mouse por encima */
+    selection-color: #FFFFFF;    /* El color del texto seleccionado */
+    outline: 0px;                /* Quita la línea punteada fea al seleccionar */
+}
+/* --- CAJA DEL BOTÓN DE LA FLECHA --- */
+/* El área del botón de la derecha (donde va la flecha) */
 QComboBox::drop-down {
-    border: 2px;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px; /* Espacio reservado para la flecha */
+    
+    /* Línea decorativa para separar la flecha del texto */
+    border-left-width: 1px;
+    border-left-color: #305853;
+    border-left-style: solid;
+    
+    /* Bordes redondeados solo a la derecha */
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    
+    background-color: #1B2A30; /* Mismo fondo o un poco más oscuro si quieres */
+}
+
+/* El icono de la flecha en sí */
+QComboBox::down-arrow {
+    /* IMPORTANTE: Qt necesita una imagen para la flecha personalizada.
+       Si no tienes una imagen 'flecha.png', Qt intentará poner la del sistema.
+       Como tu fondo es oscuro, la del sistema (negra) no se verá. 
+       
+
+    */
+    image: url(flecha_dorada.png); 
+    width: 12px;
+    height: 12px;
+
     
 }
+
+
 /* Lista de pasos limpia */
 QListWidget {
     background-color: #481716;
@@ -244,6 +284,33 @@ class MainWindow(QtWidgets.QMainWindow):
         left_layout = QtWidgets.QVBoxLayout(left_container)
         left_layout.setContentsMargins(20, 30, 20, 30)  # Margen interno
         left_layout.setSpacing(15)
+
+        # --- NUEVO BLOQUE PARA EL LOGO (IMAGEN) ---
+        # 1. Crear la etiqueta que contendrá la imagen
+        lbl_logo = QtWidgets.QLabel()
+
+        # 2. Cargar el archivo de imagen (debe estar en la misma carpeta)
+        pixmap_logo = QtGui.QPixmap("metro.png")
+
+        # 3. Verificar si la imagen cargó correctamente
+        if not pixmap_logo.isNull():
+            # 4. Escalar la imagen.
+            # "scaledToHeight(100)" hace que tenga 100px de alto y el ancho se ajuste automático.
+            # Ajusta ese '100' si la quieres más grande o más pequeña.
+            scaled_pixmap = pixmap_logo.scaledToHeight(100, Qt.SmoothTransformation)
+            lbl_logo.setPixmap(scaled_pixmap)
+
+            # 5. (Opcional) Centrar la imagen en el panel lateral
+            lbl_logo.setAlignment(Qt.AlignRight)
+
+            # 6. Añadir la imagen al layout vertical PRIMERO
+            left_layout.addWidget(lbl_logo)
+        else:
+            print("Error: No se encontró el archivo 'metro.png'")
+        # -------------------------------------------
+
+
+
 
         # Título
         title = QtWidgets.QLabel("METRO CDMX")
