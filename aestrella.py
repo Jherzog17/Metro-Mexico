@@ -1,61 +1,32 @@
 import networkx as nx
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import pandas as pd
 from networkx.algorithms.shortest_paths.astar import astar_path, astar_path_length
 
+#CARGAMOS LOS DATOS
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#La tabla de heurísticas, tiene como índice los nombres de las estaciones
 heuristicas=pd.read_csv('Datos/Limpio/tabla_heuristicas.csv', index_col=0)
+#El archivo de conexiones del metro, que contiene: estaciones origen, destino,
+#distancia real entre ambas, linea a la que pertenece
+#IMPORTANTE, en este archivo estan incluidos los transbordos
+distancias=pd.read_csv('Datos/Limpio/distancias_reales_transbordos.csv')
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+#INICIALIZACIÓN EL GRAFO
 G_mexico = nx.Graph()
-#Conexiones linea 1
-G_mexico.add_edge("Observatorio_L1", "Tacubaya_L1", weight=5)
-G_mexico.add_edge("Tacubaya_L1", "Juanacatlan_L1", weight=5)
-G_mexico.add_edge("Juanacatlan_L1", "Chapultepec_L1", weight=5)
-G_mexico.add_edge("Chapultepec_L1", "Sevilla_L1", weight=5)
-G_mexico.add_edge("Sevilla_L1", "Insurgentes_L1", weight=5)
-G_mexico.add_edge("Insurgentes_L1", "Cuauhtemoc_L1", weight=5)
-G_mexico.add_edge("Cuauhtemoc_L1", "Balderas_L1", weight=5)
-#Conexiones linea 3
-G_mexico.add_edge("Universidad_L3", "Copilco_L3", weight=5)
-G_mexico.add_edge("Copilco_L3", "M.A.De Quevedo_L3", weight=5)
-G_mexico.add_edge("M.A.De Quevedo_L3", "Viveros_L3", weight=5)
-G_mexico.add_edge("Viveros_L3", "Coyoacan_L3", weight=5)
-G_mexico.add_edge("Coyoacan_L3", "Zapata_L3", weight=5)
-G_mexico.add_edge("Zapata_L3", "Division del Norte_L3", weight=5)
-G_mexico.add_edge("Division del Norte_L3", "Eugenia_L3", weight=5)
-G_mexico.add_edge("Eugenia_L3", "Etiopia_L3", weight=5)
-G_mexico.add_edge("Etiopia_L3", "Centro Medico_L3", weight=5)
-G_mexico.add_edge("Centro Medico_L3", "Hospital General_L3", weight=5)
-G_mexico.add_edge("Hospital General_L3", "Niños Heroes_L3", weight=5)
-G_mexico.add_edge("Niños Heroes_L3", "Balderas_L3", weight=5)
-G_mexico.add_edge("Balderas_L3", "Juarez_L3", weight=5)
-#Conexiones linea 7
-G_mexico.add_edge("Barranca del Muerto_L7", "Mixcoac_L7", weight=5)
-G_mexico.add_edge("Mixcoac_L7", "San Antonio_L7", weight=5)
-G_mexico.add_edge("San Antonio_L7", "San Pedro de los Pinos_L7", weight=5)
-G_mexico.add_edge("San Pedro de los Pinos_L7", "Tacubaya_L7", weight=5)
-G_mexico.add_edge("Tacubaya_L7", "Constituyentes_L7", weight=5)
-G_mexico.add_edge("Constituyentes_L7", "Auditorio_L7", weight=5)
-G_mexico.add_edge("Auditorio_L7", "Polanco_L7", weight=5)
-#Conexiones linea 9
-G_mexico.add_edge("Tacubaya_L9", "Patriotismo_L9", weight=5)
-G_mexico.add_edge("Patriotismo_L9", "Chilpancingo_L9", weight=5)
-G_mexico.add_edge("Chilpancingo_L9", "Centro Medico_L9", weight=5)
-G_mexico.add_edge("Centro Medico_L9", "Lazaro Cardenas_L9", weight=5)
-#Conexiones linea 12
-G_mexico.add_edge("Mixcoac_L12", "Insurgentes Sur_L12", weight=5)
-G_mexico.add_edge("Insurgentes Sur_L12", "Hospital 20 Noviembre_L12", weight=5)
-G_mexico.add_edge("Hospital 20 Noviembre_L12", "Zapata_L12", weight=5)
-G_mexico.add_edge("Zapata_L12", "Parque de los Venados_L12", weight=5)
-G_mexico.add_edge( "Parque de los Venados_L12", "Eje Central_L12", weight=5)
-#Duplicamos los nodos en los que se realizan transbordos
-G_mexico.add_edge("Tacubaya_L1", "Tacubaya_L7", weight=5)
-G_mexico.add_edge("Tacubaya_L1", "Tacubaya_L9", weight=5)
-G_mexico.add_edge("Tacubaya_L7", "Tacubaya_L9", weight=5)
-G_mexico.add_edge("Mixcoac_L7", "Mixcoac_L12", weight=5)
-G_mexico.add_edge("Centro Medico_L3", "Centro Medico_L9", weight=5)
-G_mexico.add_edge("Balderas_L3", "Balderas_L1", weight=5)
-G_mexico.add_edge("Zapata_L12", "Zapata_L3", weight=5)
+#CONSTRUCCIÓN DEL GRAFO
+#Cada iteración añade una arista al grafo(add_edge),
+#usando el peso real del tramo, lo mismo con los transbordos
+for origen, destino, distancia, linea in distancias.values:
+    G_mexico.add_edge(origen, destino, weight=float(distancia))
 
 def heuristica_mexico(current, target):
+    """
+        Esta funcion calcula la heurística h(n) entre dos estaciones.
+        NetworkX llama a la funcion pasando el normbre de las estaciones de origen y destino del tipo (Observatorio_L1),
+        pero la tabla de heurísticas usa únicamente los nombres físicos (sin '_L1').
+        Por eso eliminamos la parte anterior al '_L'.
+        """
     if "_L" in current:
         current_bien = current.split("_L")[0]
     else:
@@ -68,14 +39,43 @@ def heuristica_mexico(current, target):
         return float(heuristicas.at[current_bien, target_bien])
     else:
         return 0.0
+
+#prueba para comprobar que se calculan bien las heurísticas
 print(heuristica_mexico("Observatorio", "Eje Central"))
 
+def convertir_distancia_a_tiempo(distancia_metros):
+    """
+    Esta función recibe una distancia total en metros, y pasa
+    la velocidad media del tren(35km/h), teniendo en cuenta
+    paradas, posibles retrasos... a m/s, y calcula el tiempo
+    en minutos que se tardaría en recorrer dicha distancia
+    """
+    velocidad_ms=35*1000/3600
+    tiempo=(distancia_metros/velocidad_ms)
+    minutos = int(tiempo // 60)
+    segundos = tiempo % 60
+    return str(minutos) + " mins " + str(round(segundos)) + " segs"
 
+
+#Función que ejecuta A*
 def trayecto_optimo_distancia(origen, destino):
+    """
+       Ejecuta el algoritmo A* sobre el grafo del metro.
+          -> origen y destino son estaciones del grafo, (incluyendo el sufijo de la línea)
+          - weight='weight' indica que el coste g(n) es la distancia real de la arista.
+          - heuristic=heuristica_mexico guia la búsqueda con la h(n).
+       """
     camino=nx.astar_path(G_mexico, origen, destino, heuristic=heuristica_mexico, weight="weight")
+    # Importante: astar_path_length devuelve g(n), no g(n)+h(n).
     dist_total=nx.astar_path_length(G_mexico, origen, destino, heuristic=heuristica_mexico, weight="weight")
-    return camino, dist_total
+    tiempo = convertir_distancia_a_tiempo(dist_total)
+    resultado = {
+        "ruta":camino,
+        "distancia":dist_total,
+        "tiempo":tiempo
+    }
+    return resultado
 
-ruta, distancia = trayecto_optimo_distancia("Observatorio_L1", "Eje Central_L12")
-print(f"El camino encontrado por A*:{ruta}\nDistancia total: {distancia}")
+#prueba para comprobar A*
+print(trayecto_optimo_distancia("Observatorio_L1", "Eje Central_L12"))
 
