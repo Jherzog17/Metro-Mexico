@@ -1,0 +1,95 @@
+
+
+/* Asignamos colos a la ventana principal */
+QMainWindow {
+    background-color: #1b2a30; 
+}
+
+
+/* Asignar color solo al widget del panel lateral y separarlo del mapa */
+QWidget#SidePanel {
+    background-color: #511B18;
+    border-right: 2px solid #333;
+}
+/* Diseño de los botones por defecto */
+QPushButton {
+    background-color: #305853;      /* Color de fondo azul turquesa */
+    color: #000000;     /* Color de texto negro */
+    border-radius: 8px;     /* Bordes redondos */
+    padding: 10px;      /* Tamaño botón más grande */
+    font-weight: bold;      /* texto en negrita */
+    font-size: 14px;        /* tamaño del texto*/
+}
+
+/* Cambio de color del botón al poner el cursor sobre él */
+QPushButton:hover {
+    background-color: #B06821;
+}
+
+/* Cambio de color del botón al pulsarlo */
+QPushButton:pressed {
+    background-color: #1B2A30;
+}
+
+/* Diseño del botón limpiar */
+QPushButton#btn_limpiar {
+    background-color: #305853;      /* Color de fondo del botón azul turquesa */
+    color: white;       /* Texto en blanco */
+}
+
+/* Barrita del buscador de las estaciones */
+QComboBox {
+    background-color: #1B2A30;
+    color: white;
+    border: 1px solid #0d1518; /* borde en color azul más oscuro para delimitar la barrita */
+    border-radius: 5px;
+    padding: 5px;
+       
+}
+
+/* diseño del dropdown */
+QComboBox QAbstractItemView {
+    background-color: #1B2A30;   /* color de fondo de la lista */
+    color: #E0E0E0;              /*  color gris blanquecino del texto de las opciones */
+    selection-background-color: #B06821; /* color ambar cuando pasas el cursor por encima */
+    selection-color: #FFFFFF;    /*  color blanco del texto seleccionado */
+}
+
+/* diseño del botón de la flecha a la derecha de la barrita */
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 30px; /* espaco para añadir la flecha */
+    
+    /* Línea  vertical turquesa para separar la flecha del texto */
+    border-left-width: 1px;
+    border-left-color: #305853;
+    border-left-style: solid; /* que la linea no sea discontinua */
+    }
+
+/*  la flecha en sí */
+QComboBox::down-arrow {
+    image: url(flecha_dorada.png); 
+    width: 12px;
+    height: 12px;
+}
+
+/* Lista de ruta encontrada */
+QListWidget {
+    background-color: #481716;
+    border: none;
+    color: #AAAAAA;
+    font-size: 13px;
+}
+/* linea de separacion de estaciones de ruta encontrada */
+QListWidget::item {
+    padding: 8px;
+    border-bottom: 1px solid #b06821;
+}
+QListWidget::item:selected {
+}
+/* La barra de estado */
+QStatusBar {
+    background-color: #121212;
+    color: #777;
+}
