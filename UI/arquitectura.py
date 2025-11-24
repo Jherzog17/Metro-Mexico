@@ -8,6 +8,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import QPointF, Qt
 from PySide6.QtGui import QPolygonF, QBrush, QColor, QPen, QPainter
 from metro_data import cargar_datos, calcular_ruta
+from aestrella import trayecto_optimo_distancia
 
 # Obtener el directorio raíz del proyecto
 directorio_root = Path(__file__).parent.parent.resolve()
@@ -48,63 +49,35 @@ class StationItem(QtWidgets.QGraphicsEllipseItem):
         self.setAcceptHoverEvents(True)
         self.text_item = QtWidgets.QGraphicsTextItem(name, self)
         self.text_item.setDefaultTextColor(QColor("#AAAAAA"))
-        # Un fondo semitransparente para que se lea mejor sobre líneas naranjas
-        # (Opción avanzada: usar HTML)
+
+        #Usamos html para hacerlo de forma más directa
         self.text_item.setHtml(
             f"<div style='background-color: #511b18; padding: 8px; border-radius: 8px;'>{name}</div>")
 
-        font = QtGui.QFont("Segoe UI", 14)  # Tamaño legible en pantalla
+        font = QtGui.QFont("Segoe UI", 14)
         self.text_item.setFont(font)
 
-        # 2. TRUCO DE LA ESCALA (MAGIA):
-        # Esto hace que el texto SIEMPRE se vea del mismo tamaño,
-        # aunque el mapa esté muy lejos o muy cerca.
+        # Esto hace que el texto siempre se vea del mismo tamaño, independientemente del zoom
         self.text_item.setFlag(QtWidgets.QGraphicsItem.ItemIgnoresTransformations)
-
-        # Z-Value muy alto para asegurar que flote encima de todo
-        self.text_item.setZValue(1000)
 
         # Ocultar inicialmente
         self.text_item.setVisible(False)
 
-        # Ajustar posición inicial (aunque se recalcula dinámicamente)
-        self._update_text_pos()
-
-    def _update_text_pos(self):
-        """Calcula la posición para centrar el texto encima del punto."""
-        # Obtenemos el rectángulo que ocupa el texto
-        rect = self.text_item.boundingRect()
-
-        # Matemáticas para centrar:
-        # X: Restamos la mitad del ancho del texto para centrarlo horizontalmente
-        # Y: Restamos la altura del texto y un margen extra (25px) para que suba
-        # Nota: Como usamos 'ItemIgnoresTransformations', estas unidades son "píxeles de pantalla" aprox.
-        x_offset = -rect.width() / 2
-        y_offset = -rect.height() - 15
-
-        self.text_item.setPos(x_offset, y_offset)
-
     def hoverEnterEvent(self, event):
         self.setCursor(Qt.PointingHandCursor)
         self.text_item.setVisible(True)
-        self._update_text_pos()  # Recalcular por si acaso
-
-        # Como ahora el origen es (0,0), el scale funciona perfecto desde el centro
-        self.setScale(1.5)
-        super().hoverEnterEvent(event)
+        #super().hoverEnterEvent(event)
 
     def hoverLeaveEvent(self, event):
         self.setCursor(Qt.ArrowCursor)
         self.text_item.setVisible(False)
-        self.setScale(1.0)
-        super().hoverLeaveEvent(event)
+        #super().hoverLeaveEvent(event)
 
 class MapView(QtWidgets.QGraphicsView):
-    """Visor de mapa estilo 'Google Maps Dark Mode'."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        # Configuramos la escena con fondo oscuro
+        #color fondo del mapa
         self.setScene(QtWidgets.QGraphicsScene(self))
         self.setBackgroundBrush(QBrush(QColor("#1B2A30")))
 
