@@ -1,121 +1,29 @@
 from __future__ import annotations
 import sys
+import os
 import math
+from pathlib import Path
 from typing import Callable, Dict, List, Tuple, Optional
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import QPointF, Qt
 from PySide6.QtGui import QPolygonF, QBrush, QColor, QPen, QPainter
 from metro_data import cargar_datos, calcular_ruta
 
-
-# --- CONFIGURACIÓN DE ESTILO (CSS) ---
-
-
-STYLESHEET = """
-QMainWindow {
-    background-color: #511b18; 
-}
-QLabel {
-    color: #E0E0E0;
-    font-family: 'Segoe UI', sans-serif;
-}
-/* El panel lateral "flotante" */
-QWidget#SidePanel {
-    background-color: #511B18;
-    border-right: 1px solid #333;
-}
-/* Botones modernos y redondeados */
-QPushButton {
-    background-color: #305853;
-    color: #000000;
-    border-radius: 8px;
-    padding: 10px;
-    font-weight: bold;
-    font-size: 14px;
-}
-QPushButton:hover {
-    background-color: #B06821;
-}
-QPushButton:pressed {
-    background-color: #1B2A30;
-}
-QPushButton#btn_limpiar {
-    background-color: #305853; /* Rojo suave para borrar */
-    color: white;
-}
-/* Combos estilizados */
-QComboBox {
-    background-color: #1B2A30;
-    color: white;
-    border: 1px solid #0d1518;
-    border-radius: 5px;
-    padding: 5px;
-       
-}
-
-QComboBox QAbstractItemView {
-    background-color: #1B2A30;   /* El color de fondo de la lista */
-    color: #E0E0E0;              /* El color del texto de las opciones */
-    selection-background-color: #B06821; /* El color naranja cuando pasas el mouse por encima */
-    selection-color: #FFFFFF;    /* El color del texto seleccionado */
-    outline: 0px;                /* Quita la línea punteada fea al seleccionar */
-}
-/* --- CAJA DEL BOTÓN DE LA FLECHA --- */
-/* El área del botón de la derecha (donde va la flecha) */
-QComboBox::drop-down {
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    width: 30px; /* Espacio reservado para la flecha */
-    
-    /* Línea decorativa para separar la flecha del texto */
-    border-left-width: 1px;
-    border-left-color: #305853;
-    border-left-style: solid;
-    
-    /* Bordes redondeados solo a la derecha */
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    
-    background-color: #1B2A30; /* Mismo fondo o un poco más oscuro si quieres */
-}
-
-/* El icono de la flecha en sí */
-QComboBox::down-arrow {
-    /* IMPORTANTE: Qt necesita una imagen para la flecha personalizada.
-       Si no tienes una imagen 'flecha.png', Qt intentará poner la del sistema.
-       Como tu fondo es oscuro, la del sistema (negra) no se verá. 
-       
-
-    */
-    image: url(flecha_dorada.png); 
-    width: 12px;
-    height: 12px;
-
-    
-}
+# Obtener el directorio raíz del proyecto
+directorio_root = Path(__file__).parent.parent.resolve()
 
 
-/* Lista de pasos limpia */
-QListWidget {
-    background-color: #481716;
-    border: none;
-    color: #AAAAAA;
-    font-size: 13px;
-}
-QListWidget::item {
-    padding: 8px;
-    border-bottom: 1px solid #b06821;
-}
-QListWidget::item:selected {
-    background-color: #1b2a30;
-    color: #BB86FC;
-}
-/* La barra de estado */
-QStatusBar {
-    background-color: #121212;
-    color: #777;
-}
-"""
+# --- FUNCIÓN PARA CARGAR ESTILOS CSS ---
+
+def cargar_estilos():
+    """Carga los estilos CSS desde el archivo externo estilos.css"""
+    css_path = directorio_root / "UI" / "estilos.css"
+    if css_path.exists():
+        with open(css_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    else:
+        print(f"Advertencia: No se encontró el archivo CSS en {css_path}")
+        return ""
 
 # Tipos simples
 StationId = str
@@ -335,8 +243,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self._build_ui()
         self._connect_signals()
 
-        # APLICAR EL CSS GLOBAL
-        self.setStyleSheet(STYLESHEET)
+        # APLICAR EL CSS GLOBAL desde archivo externo
+        self.setStyleSheet(cargar_estilos())
 
     def _build_ui(self):
         central = QtWidgets.QWidget(self)
@@ -362,8 +270,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # 1. Crear la etiqueta que contendrá la imagen
         lbl_logo = QtWidgets.QLabel()
 
-        # 2. Cargar el archivo de imagen (debe estar en la misma carpeta)
-        pixmap_logo = QtGui.QPixmap("metro.png")
+        # 2. Cargar el archivo de imagen desde la ruta absoluta
+        logo_path = directorio_root / "UI" / "assets" / "metro.png"
+        pixmap_logo = QtGui.QPixmap(str(logo_path))
 
         # 3. Verificar si la imagen cargó correctamente
             # 4. Escalar la imagen.
@@ -399,6 +308,21 @@ class MainWindow(QtWidgets.QMainWindow):
         self.cmb_destino.setPlaceholderText("Selecciona Destino...")
         self.cmb_origen.setEditable(True)
         self.cmb_destino.setEditable(True)
+        
+        # Configurar el icono de la flecha dorada para los ComboBox
+        flecha_path = directorio_root / "UI" / "assets" / "flecha_dorada.png"
+        if flecha_path.exists():
+            icon_flecha = QtGui.QIcon(str(flecha_path))
+            # Aplicar el estilo CSS con la imagen de la flecha
+            combo_style = f"""
+                QComboBox::down-arrow {{
+                    image: url({str(flecha_path)});
+                    width: 12px;
+                    height: 12px;
+                }}
+            """
+            self.cmb_origen.setStyleSheet(self.cmb_origen.styleSheet() + combo_style)
+            self.cmb_destino.setStyleSheet(self.cmb_destino.styleSheet() + combo_style)
 
         lbl_orig = QtWidgets.QLabel("ORIGEN")
         lbl_orig.setStyleSheet("font-size: 10px; font-weight: bold; color: #305853;")
@@ -440,7 +364,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_limpiar.setCursor(Qt.PointingHandCursor)
 
         sombrero = QtWidgets.QLabel()
-        logo_sombrero = QtGui.QPixmap("sombrero.png")
+        sombrero_path = directorio_root / "UI" / "assets" / "sombrero.png"
+        logo_sombrero = QtGui.QPixmap(str(sombrero_path))
         scaled_sombrero = logo_sombrero.scaledToHeight(30, Qt.SmoothTransformation)
         sombrero.setPixmap(scaled_sombrero)
         sombrero.setAlignment(Qt.AlignCenter)
