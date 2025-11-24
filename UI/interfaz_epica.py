@@ -9,10 +9,11 @@ from metro_data import cargar_datos, calcular_ruta
 
 
 # --- CONFIGURACIÓN DE ESTILO (CSS) ---
-# Esto le da el look "App Moderna" en lugar de "Programa de Contabilidad"
+
+
 STYLESHEET = """
 QMainWindow {
-    background-color: #121212; /* Fondo muy oscuro */
+    background-color: #511b18; 
 }
 QLabel {
     color: #E0E0E0;
@@ -122,6 +123,77 @@ Point = Tuple[float, float]
 Edge = Tuple[StationId, StationId]
 
 
+class StationItem(QtWidgets.QGraphicsEllipseItem):
+    def __init__(self, x, y, radius, name, pen, brush):
+        # 1. TRUCO DEL CENTRO:
+        # Dibujamos el círculo centrado en el (0,0) local
+        # (-r, -r, 2r, 2r) crea un círculo cuyo centro es matemáticamente el origen.
+        super().__init__(-radius, -radius, 2 * radius, 2 * radius)
+
+        # Ahora movemos el item entero a su posición en el mapa
+        self.setPos(x, y)
+
+        self.setPen(pen)
+        self.setBrush(brush)
+        self.setAcceptHoverEvents(True)
+        self.radius = radius  # Guardamos el radio para cálculos
+
+        # --- CONFIGURACIÓN DEL TEXTO ---
+        self.text_item = QtWidgets.QGraphicsTextItem(name, self)
+
+        # Estilo
+        self.text_item.setDefaultTextColor(QColor("#AAAAAA"))
+        # Un fondo semitransparente para que se lea mejor sobre líneas naranjas
+        # (Opción avanzada: usar HTML)
+        self.text_item.setHtml(
+            f"<div style='background-color: #511b18; padding: 3px; border-radius: 4px;'>{name}</div>")
+
+        font = QtGui.QFont("Segoe UI", 14)  # Tamaño legible en pantalla
+        self.text_item.setFont(font)
+
+        # 2. TRUCO DE LA ESCALA (MAGIA):
+        # Esto hace que el texto SIEMPRE se vea del mismo tamaño,
+        # aunque el mapa esté muy lejos o muy cerca.
+        self.text_item.setFlag(QtWidgets.QGraphicsItem.ItemIgnoresTransformations)
+
+        # Z-Value muy alto para asegurar que flote encima de todo
+        self.text_item.setZValue(1000)
+
+        # Ocultar inicialmente
+        self.text_item.setVisible(False)
+
+        # Ajustar posición inicial (aunque se recalcula dinámicamente)
+        self._update_text_pos()
+
+    def _update_text_pos(self):
+        """Calcula la posición para centrar el texto encima del punto."""
+        # Obtenemos el rectángulo que ocupa el texto
+        rect = self.text_item.boundingRect()
+
+        # Matemáticas para centrar:
+        # X: Restamos la mitad del ancho del texto para centrarlo horizontalmente
+        # Y: Restamos la altura del texto y un margen extra (25px) para que suba
+        # Nota: Como usamos 'ItemIgnoresTransformations', estas unidades son "píxeles de pantalla" aprox.
+        x_offset = -rect.width() / 2
+        y_offset = -rect.height() - 15
+
+        self.text_item.setPos(x_offset, y_offset)
+
+    def hoverEnterEvent(self, event):
+        self.setCursor(Qt.PointingHandCursor)
+        self.text_item.setVisible(True)
+        self._update_text_pos()  # Recalcular por si acaso
+
+        # Como ahora el origen es (0,0), el scale funciona perfecto desde el centro
+        self.setScale(1.5)
+        super().hoverEnterEvent(event)
+
+    def hoverLeaveEvent(self, event):
+        self.setCursor(Qt.ArrowCursor)
+        self.text_item.setVisible(False)
+        self.setScale(1.0)
+        super().hoverLeaveEvent(event)
+
 class MapView(QtWidgets.QGraphicsView):
     """Visor de mapa estilo 'Google Maps Dark Mode'."""
 
@@ -145,9 +217,9 @@ class MapView(QtWidgets.QGraphicsView):
 
     def wheelEvent(self, event):
         # Zoom suave tipo Google Maps
-        zoom_in_factor = 1.15
+        zoom_in_factor = 1.1
         zoom_out_factor = 1 / zoom_in_factor
-        if event.angleDelta().y() > 0:
+        if event.angleDelta().y() < 0:
             self.scale(zoom_in_factor, zoom_in_factor)
         else:
             self.scale(zoom_out_factor, zoom_out_factor)
@@ -177,20 +249,21 @@ class MapView(QtWidgets.QGraphicsView):
         # Color blanco brillante con borde oscuro
         brush_station = QBrush(QColor("#E0FFFF"))
         pen_station = QPen(QColor("#511B18"))
-        pen_station.setWidthF(8.0)
+        pen_station.setWidthF(10.0)
 
         for stationid, (x, y) in stations_xy.items():
-            # Dibujamos el círculo
-            circle = scene.addEllipse(
-                x - station_radius,
-                y - station_radius,
-                2 * station_radius,
-                2 * station_radius,
+            # En lugar de scene.addEllipse, instanciamos nuestra clase
+            station_item = StationItem(
+                x,
+                y,
+                station_radius,
+                stationid,  # Pasamos el nombre
                 pen_station,
-                brush_station,
+                brush_station
             )
-            # Añadir tooltips modernos (podría requerir HTML básico)
-            circle.setToolTip(f"Estación: {stationid}")
+
+            # Añadimos el item a la escena
+            scene.addItem(station_item)
 
         self.fitInView(scene.itemsBoundingRect().marginsAdded(QtCore.QMarginsF(50, 50, 50, 50)), Qt.KeepAspectRatio)
 
@@ -205,7 +278,7 @@ class MapView(QtWidgets.QGraphicsView):
 
         # Efecto "Glow" (Simulado dibujando una línea gruesa semitransparente debajo)
         pen_glow = QPen(route_color)
-        pen_glow.setWidthF(10.0)
+        pen_glow.setWidthF(12.0)
         pen_glow.setColor(QColor(3, 218, 198, 60))  # Mismo color, transparencia alta
         pen_glow.setCapStyle(Qt.RoundCap)
 
@@ -293,21 +366,17 @@ class MainWindow(QtWidgets.QMainWindow):
         pixmap_logo = QtGui.QPixmap("metro.png")
 
         # 3. Verificar si la imagen cargó correctamente
-        if not pixmap_logo.isNull():
             # 4. Escalar la imagen.
             # "scaledToHeight(100)" hace que tenga 100px de alto y el ancho se ajuste automático.
             # Ajusta ese '100' si la quieres más grande o más pequeña.
-            scaled_pixmap = pixmap_logo.scaledToHeight(100, Qt.SmoothTransformation)
-            lbl_logo.setPixmap(scaled_pixmap)
+        scaled_pixmap = pixmap_logo.scaledToHeight(100, Qt.SmoothTransformation)
+        lbl_logo.setPixmap(scaled_pixmap)
 
             # 5. (Opcional) Centrar la imagen en el panel lateral
-            lbl_logo.setAlignment(Qt.AlignRight)
+        lbl_logo.setAlignment(Qt.AlignCenter)
 
             # 6. Añadir la imagen al layout vertical PRIMERO
-            left_layout.addWidget(lbl_logo)
-        else:
-            print("Error: No se encontró el archivo 'metro.png'")
-        # -------------------------------------------
+        left_layout.addWidget(lbl_logo)
 
 
 
@@ -316,10 +385,12 @@ class MainWindow(QtWidgets.QMainWindow):
         title = QtWidgets.QLabel("METRO CDMX")
         title.setStyleSheet("font-size: 24px; font-weight: 900; color: #B06821; letter-spacing: 2px;")
         left_layout.addWidget(title)
+        title.setAlignment(Qt.AlignCenter)
 
-        subtitle = QtWidgets.QLabel("Planificador de Ruta Inteligente")
-        subtitle.setStyleSheet("color: #305853; font-size: 12px; margin-bottom: 10px;")
+        subtitle = QtWidgets.QLabel("Planificador de Ruta 🇲🇽")
+        subtitle.setStyleSheet("color: #305853; font-size: 12px; margin-bottom: 11px;")
         left_layout.addWidget(subtitle)
+        subtitle.setAlignment(Qt.AlignCenter)
 
         # Inputs
         self.cmb_origen = QtWidgets.QComboBox()
@@ -362,13 +433,26 @@ class MainWindow(QtWidgets.QMainWindow):
         # Botones secundarios
         btn_row = QtWidgets.QHBoxLayout()
         self.btn_cargar = QtWidgets.QPushButton("Recargar Datos")
-        self.btn_cargar.setStyleSheet("background-color: #305853; color: white; font-size: 11px;")
-        self.btn_limpiar = QtWidgets.QPushButton("Limpiar")
+        self.btn_cargar.setCursor(Qt.PointingHandCursor)
+        self.btn_cargar.setStyleSheet("background-color: #305853; color: white;")
+        self.btn_limpiar = QtWidgets.QPushButton("      Limpiar      ")
         self.btn_limpiar.setObjectName("btn_limpiar")  # ID para CSS rojo
+        self.btn_limpiar.setCursor(Qt.PointingHandCursor)
+
+        sombrero = QtWidgets.QLabel()
+        logo_sombrero = QtGui.QPixmap("sombrero.png")
+        scaled_sombrero = logo_sombrero.scaledToHeight(30, Qt.SmoothTransformation)
+        sombrero.setPixmap(scaled_sombrero)
+        sombrero.setAlignment(Qt.AlignCenter)
+
+
+
 
         btn_row.addWidget(self.btn_cargar)
+        btn_row.addWidget(sombrero)
         btn_row.addWidget(self.btn_limpiar)
         left_layout.addLayout(btn_row)
+
 
         # --- PANEL DERECHO (MAPA) ---
         self.map = MapView()
