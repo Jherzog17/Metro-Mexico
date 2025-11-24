@@ -8,100 +8,92 @@ from PySide6.QtGui import QPolygonF, QBrush, QColor, QPen, QPainter
 from metro_data import cargar_datos, calcular_ruta
 
 
-# --- CONFIGURACIÓN DE ESTILO (CSS) ---
+# Configuración del Estilo (colores, tamaños, fuentes...)
 
 
 STYLESHEET = """
+/* Asignamos colos a la ventana principal */
 QMainWindow {
-    background-color: #511b18; 
+    background-color: #1b2a30; 
 }
-QLabel {
-    color: #E0E0E0;
-    font-family: 'Segoe UI', sans-serif;
-}
-/* El panel lateral "flotante" */
+
+
+/* Asignar color solo al widget del panel lateral y separarlo del mapa */
 QWidget#SidePanel {
     background-color: #511B18;
-    border-right: 1px solid #333;
+    border-right: 2px solid #333;
 }
-/* Botones modernos y redondeados */
+/* Diseño de los botones por defecto */
 QPushButton {
-    background-color: #305853;
-    color: #000000;
-    border-radius: 8px;
-    padding: 10px;
-    font-weight: bold;
-    font-size: 14px;
+    background-color: #305853;      /* Color de fondo azul turquesa */
+    color: #000000;     /* Color de texto negro */
+    border-radius: 8px;     /* Bordes redondos */
+    padding: 10px;      /* Tamaño botón más grande */
+    font-weight: bold;      /* texto en negrita */
+    font-size: 14px;        /* tamaño del texto*/
 }
+
+/* Cambio de color del botón al poner el cursor sobre él */
 QPushButton:hover {
     background-color: #B06821;
 }
+
+/* Cambio de color del botón al pulsarlo */
 QPushButton:pressed {
     background-color: #1B2A30;
 }
+
+/* Diseño del botón limpiar */
 QPushButton#btn_limpiar {
-    background-color: #305853; /* Rojo suave para borrar */
-    color: white;
+    background-color: #305853;      /* Color de fondo del botón azul turquesa */
+    color: white;       /* Texto en blanco */
 }
-/* Combos estilizados */
+
+/* Barrita del buscador de las estaciones */
 QComboBox {
     background-color: #1B2A30;
     color: white;
-    border: 1px solid #0d1518;
+    border: 1px solid #0d1518; /* borde en color azul más oscuro para delimitar la barrita */
     border-radius: 5px;
     padding: 5px;
        
 }
 
+/* diseño del dropdown */
 QComboBox QAbstractItemView {
-    background-color: #1B2A30;   /* El color de fondo de la lista */
-    color: #E0E0E0;              /* El color del texto de las opciones */
-    selection-background-color: #B06821; /* El color naranja cuando pasas el mouse por encima */
-    selection-color: #FFFFFF;    /* El color del texto seleccionado */
-    outline: 0px;                /* Quita la línea punteada fea al seleccionar */
+    background-color: #1B2A30;   /* color de fondo de la lista */
+    color: #E0E0E0;              /*  color gris blanquecino del texto de las opciones */
+    selection-background-color: #B06821; /* color ambar cuando pasas el cursor por encima */
+    selection-color: #FFFFFF;    /*  color blanco del texto seleccionado */
 }
-/* --- CAJA DEL BOTÓN DE LA FLECHA --- */
-/* El área del botón de la derecha (donde va la flecha) */
+
+/* diseño del botón de la flecha a la derecha de la barrita */
 QComboBox::drop-down {
     subcontrol-origin: padding;
     subcontrol-position: top right;
-    width: 30px; /* Espacio reservado para la flecha */
+    width: 30px; /* espaco para añadir la flecha */
     
-    /* Línea decorativa para separar la flecha del texto */
+    /* Línea  vertical turquesa para separar la flecha del texto */
     border-left-width: 1px;
     border-left-color: #305853;
-    border-left-style: solid;
-    
-    /* Bordes redondeados solo a la derecha */
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    
-    background-color: #1B2A30; /* Mismo fondo o un poco más oscuro si quieres */
-}
+    border-left-style: solid; /* que la linea no sea discontinua */
+    }
 
-/* El icono de la flecha en sí */
+/*  la flecha en sí */
 QComboBox::down-arrow {
-    /* IMPORTANTE: Qt necesita una imagen para la flecha personalizada.
-       Si no tienes una imagen 'flecha.png', Qt intentará poner la del sistema.
-       Como tu fondo es oscuro, la del sistema (negra) no se verá. 
-       
-
-    */
     image: url(flecha_dorada.png); 
     width: 12px;
     height: 12px;
-
-    
 }
 
-
-/* Lista de pasos limpia */
+/* Lista de ruta buscada */
 QListWidget {
     background-color: #481716;
     border: none;
     color: #AAAAAA;
     font-size: 13px;
 }
+
 QListWidget::item {
     padding: 8px;
     border-bottom: 1px solid #b06821;

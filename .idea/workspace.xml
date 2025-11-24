@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b3f2fc60-ac27-456f-8f02-79c209b6a971" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Metro-Mexico.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Metro-Mexico.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UI/interfaz_epica.py" beforeDir="false" afterPath="$PROJECT_DIR$/UI/interfaz_epica.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/metro.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/metro.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UI/sombrero.png" beforeDir="false" afterPath="$PROJECT_DIR$/UI/sombrero.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
