@@ -106,7 +106,7 @@ class MapView(QtWidgets.QGraphicsView):
             self,
             stations_xy: Dict[StationId, Point],
             edges: List[Edge],
-            station_radius: float = 16.0,  # Estaciones un poco más grandes
+            station_radius: float = 18.0,  # Estaciones un poco más grandes
     ) -> None:
         scene = self.scene()
         scene.clear()
@@ -114,7 +114,7 @@ class MapView(QtWidgets.QGraphicsView):
         # 1. Dibujar conexiones (aristas) estilo "Línea de Metro"
         # Usamos un color gris medio para las líneas inactivas
         pen_edge = QPen(QColor("#B06821"))
-        pen_edge.setWidthF(5.0)  # Líneas más gruesas
+        pen_edge.setWidthF(10.0)  # Líneas más gruesas
         pen_edge.setCapStyle(Qt.RoundCap)  # Bordes de línea redondeados
 
         for a, b in edges:
@@ -267,7 +267,7 @@ class MainWindow(QtWidgets.QMainWindow):
         title.setAlignment(Qt.AlignCenter)
 
         subtitle = QtWidgets.QLabel("Planificador de Ruta 🇲🇽")
-        subtitle.setStyleSheet("color: #305853; font-size: 12px; margin-bottom: 11px;")
+        subtitle.setStyleSheet("color: #305853; font-size: 14px; margin-bottom: 11px;")
         left_layout.addWidget(subtitle)
         subtitle.setAlignment(Qt.AlignCenter)
 
@@ -295,12 +295,12 @@ class MainWindow(QtWidgets.QMainWindow):
             self.cmb_destino.setStyleSheet(self.cmb_destino.styleSheet() + combo_style)
 
         lbl_orig = QtWidgets.QLabel("ORIGEN")
-        lbl_orig.setStyleSheet("font-size: 10px; font-weight: bold; color: #305853;")
+        lbl_orig.setStyleSheet("font-size: 12px; font-weight: bold; color: #305853;")
         left_layout.addWidget(lbl_orig)
         left_layout.addWidget(self.cmb_origen)
 
         lbl_dest = QtWidgets.QLabel("DESTINO")
-        lbl_dest.setStyleSheet("font-size: 10px; font-weight: bold; color: #305853;")
+        lbl_dest.setStyleSheet("font-size: 12px; font-weight: bold; color: #305853;")
         left_layout.addWidget(lbl_dest)
         left_layout.addWidget(self.cmb_destino)
 
@@ -362,11 +362,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.time_box.setWordWrap(True)
         self.time_box.setStyleSheet("""
             QLabel {
-                background-color: #27A85D;
+                background-color: #305853;
                 color: white;
                 font-size: 18px;
                 font-weight: bold;
-                padding: 20px 30px;
+                padding: 18px 28px;
                 border-radius: 10px;
                 margin: 20px 100px;
             }
