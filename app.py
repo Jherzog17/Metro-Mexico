@@ -12,7 +12,7 @@ ui_path = Path(__file__).parent / "UI"
 sys.path.insert(0, str(ui_path))
 
 # Importar y ejecutar la aplicación
-from arquitectura import main
+from UI.arquitectura import main
 
 if __name__ == "__main__":
     main()
