@@ -350,11 +350,38 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # --- PANEL DERECHO (MAPA) ---
+        # Crear un contenedor para el mapa con overlay
+        map_container = QtWidgets.QWidget()
+        map_layout = QtWidgets.QVBoxLayout(map_container)
+        map_layout.setContentsMargins(0, 0, 0, 0)
+        map_layout.setSpacing(0)
+        
+        # Caja de tiempo estimado (inicialmente oculta)
+        self.time_box = QtWidgets.QLabel()
+        self.time_box.setAlignment(Qt.AlignCenter)
+        self.time_box.setWordWrap(True)
+        self.time_box.setStyleSheet("""
+            QLabel {
+                background-color: #27A85D;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                padding: 20px 30px;
+                border-radius: 10px;
+                margin: 20px 100px;
+            }
+        """)
+        self.time_box.setVisible(False)  # Oculto por defecto
+        
         self.map = MapView()
+        
+        # Añadir widgets al contenedor del mapa
+        map_layout.addWidget(self.time_box)
+        map_layout.addWidget(self.map, 1)
 
         # Añadir al layout principal
         main_layout.addWidget(left_container)
-        main_layout.addWidget(self.map, 1)  # 1 = estirar mapa todo lo posible
+        main_layout.addWidget(map_container, 1)  # 1 = estirar mapa todo lo posible
 
         # Barra de estado minimalista
         self.status = QtWidgets.QStatusBar()
@@ -406,6 +433,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_clear(self):
         self.steps_list.clear()
         self.lbl_resumen.setText("Esperando ruta...")
+        self.time_box.setVisible(False)  # Ocultar la caja de tiempo
         self.map.draw_network(self.stations_xy, self.edges)  # Redibuja limpio
 
     @QtCore.Slot(str, str)
@@ -415,10 +443,16 @@ class MainWindow(QtWidgets.QMainWindow):
         result = self._route_finder(origen, destino)
         if not result:
             self.lbl_resumen.setText("⚠ No hay ruta disponible.")
+            self.time_box.setVisible(False)
             return
 
-        # result is now just a list of station names
-        path = result
+        # result is now a dictionary with 'ruta', 'distancia', and 'tiempo'
+        path = result["ruta"]
+        tiempo = result["tiempo"]
+        
+        # Mostrar la caja de tiempo estimado
+        self.time_box.setText(f"El tiempo estimado para llegar de {origen} a {destino} es de:\n{tiempo}")
+        self.time_box.setVisible(True)
         
         self.steps_list.clear()
         for i, stationid in enumerate(path):
