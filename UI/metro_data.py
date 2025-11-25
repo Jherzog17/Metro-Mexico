@@ -161,6 +161,7 @@ def calcular_ruta(origen, destino, graph, station_mapping, reverse_mapping, heur
     # Retornar diccionario con toda la información
     return {
         "ruta": simple_path,
+        "ruta_cruda": best_resultado["ruta"],
         "distancia": best_resultado["distancia"],
         "tiempo": best_resultado["tiempo"]
     }

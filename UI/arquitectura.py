@@ -32,6 +32,24 @@ StationId = str
 Point = Tuple[float, float]
 Edge = Tuple[StationId, StationId]
 
+# Colores de las líneas (según petición del usuario)
+colores_lineas = {
+    "L1": "#F04E98",       # Rosa
+    "L2": "#0055A4",       # Azul
+    "L3": "#A8C813",       # Verde pistacho
+    "L4": "#66C0CC",       # Azul clarito
+    "L5": "#FFD100",       # Amarillo
+    "L6": "#DA291C",       # Rojo
+    "L7": "#000080",       # Azul marino
+    "L8": "#009A44",       # Verde
+    "L9": "#582C2B",       # Marron
+    "LA": "#9E2064",       # Morado
+    "LB": "#B1B3B3",       # Gris
+    "L12": "#C0A062",      # Beige
+    "Transfer": "#FF7F00", # Naranja
+    "Default": "#AAAAAA"
+}
+
 
 class StationItem(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, x, y, radius, name, pen, brush):
@@ -421,6 +439,25 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             self.status.showMessage(f"Error: {str(e)}")
 
+    def crear_icono_circulo(self, color_hex: str, tamano: int = 16) -> QtGui.QIcon:
+        """
+        Crea un icono circular del color especificado.
+        Se usa para mostrar el color de la línea en la lista de pasos.
+        """
+        pixmap = QtGui.QPixmap(tamano, tamano)
+        pixmap.fill(Qt.transparent)
+        
+        painter = QtGui.QPainter(pixmap)
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        
+        # Dibujar círculo
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(QColor(color_hex))
+        painter.drawEllipse(0, 0, tamano, tamano)
+        
+        painter.end()
+        return QtGui.QIcon(pixmap)
+
     @QtCore.Slot()
     def on_calculate(self):
         origen = self.cmb_origen.currentText().strip()
@@ -437,7 +474,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.map.draw_network(self.stations_xy, self.edges)  # Redibuja limpio
 
     @QtCore.Slot(str, str)
-    @QtCore.Slot(str, str)
     def _handle_route_requested(self, origen: str, destino: str):
         if not self._route_finder:
             return
@@ -447,46 +483,69 @@ class MainWindow(QtWidgets.QMainWindow):
             self.time_box.setVisible(False)
             return
 
-        # result is now a dictionary with 'ruta', 'distancia', and 'tiempo'
-        path = result["ruta"]
+        # result es ahora un diccionario con 'ruta', 'distancia', y 'tiempo'
+        ruta = result["ruta"]
+        ruta_cruda = result.get("ruta_cruda", []) # Obtener ruta con sufijos _L (ej: Observatorio_L1)
         tiempo = result["tiempo"]
         
+        # Mostrar la caja de tiempo estimado
         self.time_box.setText(f"El tiempo estimado para llegar de {origen} a {destino} es de:\n{tiempo}")
         self.time_box.setVisible(True)
         
         self.steps_list.clear()
         
-        
-        for i, stationid in enumerate(path):
-            item = QtWidgets.QListWidgetItem(f"{stationid}") # Quitamos el número del texto, queda más limpio con el icono
-            
-            # 1. Crear un "lienzo" invisible de 12x12 píxeles
-            pixmap = QtGui.QPixmap(12, 12)
-            pixmap.fill(Qt.transparent) # Fondo transparente
-            
-            # 2. Configurar el pintor
-            painter = QtGui.QPainter(pixmap)
-            painter.setRenderHint(QtGui.QPainter.Antialiasing) # Para que el circulo no se vea pixelado
-            painter.setPen(Qt.NoPen) # Sin borde negro
-            
-            # 3. Elegir color (Usamos el naranja de tu tema o blanco)
-            # Puedes poner "#B06821" (Naranja) o "#FFFFFF" (Blanco)
-            painter.setBrush(QtGui.QColor("#B06821")) 
-            
-            # 4. Dibujar el círculo
-            painter.drawEllipse(0, 0, 12, 12)
-            painter.end()
-            
-            # 5. Añadir el icono al item
-            item.setIcon(QtGui.QIcon(pixmap))
-            
-            self.steps_list.addItem(item)
-        # --- FIN DE LA MODIFICACIÓN ---
+        # Si no tenemos ruta_cruda (por compatibilidad), usamos ruta normal pero sin colores específicos
+        if not ruta_cruda:
+            ruta_cruda = ruta
 
-        num_stations = len(path) - 1
-        self.lbl_resumen.setText(f"✔ Ruta calculada: {num_stations} estaciones")
+        for i, nombre_estacion in enumerate(ruta):
+            # Determinar color por defecto
+            color_hex = colores_lineas["Default"]
+            
+            # Obtener nodo crudo actual (con información de línea)
+            nodo_crudo = ruta_cruda[i]
+            
+            # Lógica para detectar transbordo:
+            # Si la estación actual tiene el mismo nombre simple que la anterior o la siguiente, es un transbordo
+            es_transbordo = False
+            
+            # Chequear estación anterior
+            if i > 0:
+                nombre_previo = ruta[i-1]
+                if nombre_previo == nombre_estacion:
+                    es_transbordo = True
+            
+            # Chequear estación siguiente
+            if i < len(ruta) - 1:
+                nombre_siguiente = ruta[i+1]
+                if nombre_siguiente == nombre_estacion:
+                    es_transbordo = True
+            
+            if es_transbordo:
+                # Si es transbordo, usamos el color naranja
+                color_hex = colores_lineas["Transfer"]
+            else:
+                # Extraer línea del nodo_crudo (ej: Observatorio_L1 -> L1)
+                if "_L" in nodo_crudo:
+                    partes = nodo_crudo.split("_L")
+                    if len(partes) > 1:
+                        codigo_linea = "L" + partes[1]
+                        # Obtener el color correspondiente a la línea
+                        color_hex = colores_lineas.get(codigo_linea, colores_lineas["Default"])
+            
+            # Crear icono con el color determinado
+            icono = self.crear_icono_circulo(color_hex)
+            
+            # Crear item de la lista
+            elemento = QtWidgets.QListWidgetItem(f"{i + 1}. {nombre_estacion}")
+            elemento.setIcon(icono)
+            self.steps_list.addItem(elemento)
+
+        # Calcular número de estaciones (restamos 1 porque n estaciones son n-1 tramos)
+        num_estaciones = len(ruta) - 1
+        self.lbl_resumen.setText(f"✔ Ruta calculada: {num_estaciones} estaciones")
         self.map.draw_network(self.stations_xy, self.edges)
-        self.map.draw_route(self.stations_xy, path)
+        self.map.draw_route(self.stations_xy, ruta)
 
 
 # --------- VARIABLES GLOBALES PARA DATOS DEL METRO ---------
