@@ -34,19 +34,19 @@ Edge = Tuple[StationId, StationId]
 
 # Colores de las líneas (según petición del usuario)
 colores_lineas = {
-    "L1": "#F04E98",       # Rosa
-    "L2": "#0055A4",       # Azul
-    "L3": "#A8C813",       # Verde pistacho
-    "L4": "#66C0CC",       # Azul clarito
-    "L5": "#FFD100",       # Amarillo
+    "L1": "#D7439D",       # Rosa
+    "L2": "#005eb8",       # Azul
+    "L3": "#FFC600",       # Amarillo
+    "L4": "#97D700",       # Verde
+    "L5": "#FFE900",       # Amarillo
     "L6": "#DA291C",       # Rojo
-    "L7": "#000080",       # Azul marino
+    "L7": "#FF8200",       # Naranja
     "L8": "#009A44",       # Verde
-    "L9": "#582C2B",       # Marron
-    "LA": "#9E2064",       # Morado
-    "LB": "#B1B3B3",       # Gris
-    "L12": "#C0A062",      # Beige
-    "Transfer": "#FF7F00", # Naranja
+    "L9": "#4A2E1F",       # Marron
+    "LA": "#9B26B6",       # Morado
+    "LB": "#A7A8AA",       # Gris
+    "L12": "#C6AA76",      # Beige
+    "Transfer": "#305853", # Naranja
     "Default": "#AAAAAA"
 }
 
@@ -380,13 +380,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.time_box.setWordWrap(True)
         self.time_box.setStyleSheet("""
             QLabel {
-                background-color: #305853;
-                color: white;
+                background-color: #B06821;
+                color: #511B18;
                 font-size: 18px;
-                font-weight: bold;
-                padding: 18px 28px;
+                padding: 14px 14px;
                 border-radius: 10px;
-                margin: 20px 100px;
+                margin: 20px 150px;
             }
         """)
         self.time_box.setVisible(False)  # Oculto por defecto
