@@ -78,15 +78,21 @@ QComboBox::down-arrow {
 QListWidget {
     background-color: #481716;
     border: none;
-    color: #AAAAAA;
-    font-size: 13px;
+    color: #E0E0E0; /* Texto un poco más claro para mejor lectura */
+    font-size: 14px;
+    outline: 0; /* Quita la línea punteada al seleccionar */
 }
+
 /* linea de separacion de estaciones de ruta encontrada */
 QListWidget::item {
-    padding: 8px;
-    border-bottom: 1px solid #b06821;
+    padding: 10px; /* Un poco más de aire */
+    border-bottom: 1px solid #632624; /* Separador sutil */
+    margin-left: 5px; /* Margen para que el icono no toque el borde izquierdo */
 }
-QListWidget::item:selected {
+
+/* Efecto cuando pasas el ratón por encima de la estación en la lista */
+QListWidget::item:hover {
+    background-color: #5a201e;
 }
 /* La barra de estado */
 QStatusBar {

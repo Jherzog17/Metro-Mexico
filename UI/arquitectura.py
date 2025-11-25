@@ -437,6 +437,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.map.draw_network(self.stations_xy, self.edges)  # Redibuja limpio
 
     @QtCore.Slot(str, str)
+    @QtCore.Slot(str, str)
     def _handle_route_requested(self, origen: str, destino: str):
         if not self._route_finder:
             return
@@ -450,17 +451,38 @@ class MainWindow(QtWidgets.QMainWindow):
         path = result["ruta"]
         tiempo = result["tiempo"]
         
-        # Mostrar la caja de tiempo estimado
         self.time_box.setText(f"El tiempo estimado para llegar de {origen} a {destino} es de:\n{tiempo}")
         self.time_box.setVisible(True)
         
         self.steps_list.clear()
+        
+        
         for i, stationid in enumerate(path):
-            # Icono bonito en la lista
-            item = QtWidgets.QListWidgetItem(f"{i + 1}. {stationid}")
+            item = QtWidgets.QListWidgetItem(f"{stationid}") # Quitamos el número del texto, queda más limpio con el icono
+            
+            # 1. Crear un "lienzo" invisible de 12x12 píxeles
+            pixmap = QtGui.QPixmap(12, 12)
+            pixmap.fill(Qt.transparent) # Fondo transparente
+            
+            # 2. Configurar el pintor
+            painter = QtGui.QPainter(pixmap)
+            painter.setRenderHint(QtGui.QPainter.Antialiasing) # Para que el circulo no se vea pixelado
+            painter.setPen(Qt.NoPen) # Sin borde negro
+            
+            # 3. Elegir color (Usamos el naranja de tu tema o blanco)
+            # Puedes poner "#B06821" (Naranja) o "#FFFFFF" (Blanco)
+            painter.setBrush(QtGui.QColor("#B06821")) 
+            
+            # 4. Dibujar el círculo
+            painter.drawEllipse(0, 0, 12, 12)
+            painter.end()
+            
+            # 5. Añadir el icono al item
+            item.setIcon(QtGui.QIcon(pixmap))
+            
             self.steps_list.addItem(item)
+        # --- FIN DE LA MODIFICACIÓN ---
 
-        # Calculate number of stations (not transfers)
         num_stations = len(path) - 1
         self.lbl_resumen.setText(f"✔ Ruta calculada: {num_stations} estaciones")
         self.map.draw_network(self.stations_xy, self.edges)
