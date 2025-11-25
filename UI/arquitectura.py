@@ -542,7 +542,11 @@ class MainWindow(QtWidgets.QMainWindow):
             icono = self.crear_icono_circulo(color_hex)
             
             # Crear item de la lista
-            elemento = QtWidgets.QListWidgetItem(f"{contador_visual}. {nombre_estacion}")
+            texto_item = f"{contador_visual}. {nombre_estacion}"
+            if es_transbordo:
+                texto_item += " (Transbordo)"
+            
+            elemento = QtWidgets.QListWidgetItem(texto_item)
             elemento.setIcon(icono)
             self.steps_list.addItem(elemento)
             
