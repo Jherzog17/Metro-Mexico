@@ -5,8 +5,7 @@ En esta practica hemos creado una aplicación que determina la ruta en metro má
 ## Cómo Ejecutar la Aplicación
 
 ```bash
-cd UI
-python3 interfaz_epica.py
+python3 app.py
 ```
 
 ## Librerías Necesarias
@@ -33,10 +32,16 @@ pip install numpy
 
 ```
 PracticaMetroMexico/
+├── app.py                    # Punto de entrada principal de la aplicación
 ├── aestrella.py              # Implementación del algoritmo A*
 ├── UI/
-│   ├── interfaz_epica.py     # Interfaz gráfica principal
-│   └── metro_data.py         # Funciones de carga de datos
+│   ├── arquitectura.py       # Interfaz gráfica principal
+│   ├── metro_data.py         # Funciones de carga de datos
+│   ├── estilos.css           # Estilos CSS para la interfaz
+│   └── assets/               # Recursos gráficos (imágenes, iconos)
+│       ├── metro.png
+│       ├── flecha_dorada.png
+│       └── sombrero.png
 ├── Datos/
 │   ├── Limpio/               # Datos procesados (CSV)
 │   ├── sacar_datos.py        # Script para procesar datos

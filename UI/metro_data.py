@@ -121,17 +121,17 @@ def calcular_ruta(origen, destino, graph, station_mapping, reverse_mapping, heur
         heuristics_df: DataFrame con la tabla de heurísticas (no se usa)
     
     Returns:
-        list: Lista de estaciones en la ruta (nombres simples)
+        dict: Diccionario con 'ruta' (lista de estaciones), 'distancia' y 'tiempo'
     """
     # Obtener todas las opciones de líneas para origen y destino
     start_options = station_mapping.get(origen, [])
     goal_options = station_mapping.get(destino, [])
     
     if not start_options or not goal_options:
-        return []
+        return None
     
     # Probar todas las combinaciones y encontrar la ruta más corta
-    best_path = None
+    best_resultado = None
     best_length = float('inf')
     
     for start in start_options:
@@ -140,24 +140,29 @@ def calcular_ruta(origen, destino, graph, station_mapping, reverse_mapping, heur
                 # Usar la función de aestrella.py
                 resultado = trayecto_optimo_distancia(start, goal)
                 
-                # Extraer ruta y distancia del resultado
-                path = resultado["ruta"]
+                # Extraer distancia del resultado
                 length = resultado["distancia"]
                 
                 if length < best_length:
                     best_length = length
-                    best_path = path
+                    best_resultado = resultado
                     
             except Exception:
                 # Si no hay camino, continuar con la siguiente combinación
                 continue
     
-    if best_path is None:
-        return []
+    if best_resultado is None:
+        return None
     
     # Convertir a nombres simples para la UI
     simple_path = [reverse_mapping.get(node, node.split("_L")[0] if "_L" in node else node)
-                   for node in best_path]
+                   for node in best_resultado["ruta"]]
     
-    return simple_path
+    # Retornar diccionario con toda la información
+    return {
+        "ruta": simple_path,
+        "ruta_cruda": best_resultado["ruta"],
+        "distancia": best_resultado["distancia"],
+        "tiempo": best_resultado["tiempo"]
+    }
 

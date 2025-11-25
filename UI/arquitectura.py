@@ -32,6 +32,24 @@ StationId = str
 Point = Tuple[float, float]
 Edge = Tuple[StationId, StationId]
 
+# Colores de las líneas (según petición del usuario)
+colores_lineas = {
+    "L1": "#F04E98",       # Rosa
+    "L2": "#0055A4",       # Azul
+    "L3": "#A8C813",       # Verde pistacho
+    "L4": "#66C0CC",       # Azul clarito
+    "L5": "#FFD100",       # Amarillo
+    "L6": "#DA291C",       # Rojo
+    "L7": "#000080",       # Azul marino
+    "L8": "#009A44",       # Verde
+    "L9": "#582C2B",       # Marron
+    "LA": "#9E2064",       # Morado
+    "LB": "#B1B3B3",       # Gris
+    "L12": "#C0A062",      # Beige
+    "Transfer": "#FF7F00", # Naranja
+    "Default": "#AAAAAA"
+}
+
 
 class StationItem(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, x, y, radius, name, pen, brush):
@@ -109,15 +127,18 @@ class MapView(QtWidgets.QGraphicsView):
         else:
             self.scale(zoom_out_factor, zoom_out_factor)
 
-    # funcion para dibujar los nodos (estaciones) y aristas (caminos)
-    def draw_network(self, stations_xy: Dict[StationId, Point], edges: List[Edge], station_radius: float = 16.0) -> None:
+    def draw_network(
+            self,
+            stations_xy: Dict[StationId, Point],
+            edges: List[Edge],
+            station_radius: float = 18.0,  # Estaciones un poco más grandes
+    ) -> None:
         scene = self.scene()
         scene.clear()
 
         # 1. Dibujar aristas
         pen_edge = QPen(QColor("#B06821"))
-        pen_edge.setWidthF(5.0)
-        # nota: creo que se puede quitar esta linea, no lo puedo probar pq hay que hacer zoom eb el mapa:
+        pen_edge.setWidthF(10.0)  # Líneas más gruesas
         pen_edge.setCapStyle(Qt.RoundCap)  # Bordes de línea redondeados
 
         for a, b in edges:
@@ -261,7 +282,7 @@ class MainWindow(QtWidgets.QMainWindow):
         title.setAlignment(Qt.AlignCenter)
 
         subtitle = QtWidgets.QLabel("Planificador de Ruta 🇲🇽")
-        subtitle.setStyleSheet("color: #305853; font-size: 12px; margin-bottom: 11px;")
+        subtitle.setStyleSheet("color: #305853; font-size: 14px; margin-bottom: 11px;")
         left_layout.addWidget(subtitle)
         subtitle.setAlignment(Qt.AlignCenter)
 
@@ -289,12 +310,12 @@ class MainWindow(QtWidgets.QMainWindow):
             self.cmb_destino.setStyleSheet(self.cmb_destino.styleSheet() + combo_style)
 
         lbl_orig = QtWidgets.QLabel("ORIGEN")
-        lbl_orig.setStyleSheet("font-size: 10px; font-weight: bold; color: #305853;")
+        lbl_orig.setStyleSheet("font-size: 12px; font-weight: bold; color: #305853;")
         left_layout.addWidget(lbl_orig)
         left_layout.addWidget(self.cmb_origen)
 
         lbl_dest = QtWidgets.QLabel("DESTINO")
-        lbl_dest.setStyleSheet("font-size: 10px; font-weight: bold; color: #305853;")
+        lbl_dest.setStyleSheet("font-size: 12px; font-weight: bold; color: #305853;")
         left_layout.addWidget(lbl_dest)
         left_layout.addWidget(self.cmb_destino)
 
@@ -344,11 +365,38 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         # --- PANEL DERECHO (MAPA) ---
+        # Crear un contenedor para el mapa con overlay
+        map_container = QtWidgets.QWidget()
+        map_layout = QtWidgets.QVBoxLayout(map_container)
+        map_layout.setContentsMargins(0, 0, 0, 0)
+        map_layout.setSpacing(0)
+        
+        # Caja de tiempo estimado (inicialmente oculta)
+        self.time_box = QtWidgets.QLabel()
+        self.time_box.setAlignment(Qt.AlignCenter)
+        self.time_box.setWordWrap(True)
+        self.time_box.setStyleSheet("""
+            QLabel {
+                background-color: #305853;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                padding: 18px 28px;
+                border-radius: 10px;
+                margin: 20px 100px;
+            }
+        """)
+        self.time_box.setVisible(False)  # Oculto por defecto
+        
         self.map = MapView()
+        
+        # Añadir widgets al contenedor del mapa
+        map_layout.addWidget(self.time_box)
+        map_layout.addWidget(self.map, 1)
 
         # Añadir al layout principal
         main_layout.addWidget(left_container)
-        main_layout.addWidget(self.map, 1)  # 1 = estirar mapa todo lo posible
+        main_layout.addWidget(map_container, 1)  # 1 = estirar mapa todo lo posible
 
         # Barra de estado minimalista
         self.status = QtWidgets.QStatusBar()
@@ -388,6 +436,25 @@ class MainWindow(QtWidgets.QMainWindow):
         except Exception as e:
             self.status.showMessage(f"Error: {str(e)}")
 
+    def crear_icono_circulo(self, color_hex: str, tamano: int = 16) -> QtGui.QIcon:
+        """
+        Crea un icono circular del color especificado.
+        Se usa para mostrar el color de la línea en la lista de pasos.
+        """
+        pixmap = QtGui.QPixmap(tamano, tamano)
+        pixmap.fill(Qt.transparent)
+        
+        painter = QtGui.QPainter(pixmap)
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        
+        # Dibujar círculo
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(QColor(color_hex))
+        painter.drawEllipse(0, 0, tamano, tamano)
+        
+        painter.end()
+        return QtGui.QIcon(pixmap)
+
     @QtCore.Slot()
     def on_calculate(self):
         origen = self.cmb_origen.currentText().strip()
@@ -400,6 +467,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_clear(self):
         self.steps_list.clear()
         self.lbl_resumen.setText("Esperando ruta...")
+        self.time_box.setVisible(False)  # Ocultar la caja de tiempo
         self.map.draw_network(self.stations_xy, self.edges)  # Redibuja limpio
 
     @QtCore.Slot(str, str)
@@ -409,22 +477,83 @@ class MainWindow(QtWidgets.QMainWindow):
         result = self._route_finder(origen, destino)
         if not result:
             self.lbl_resumen.setText("⚠ No hay ruta disponible.")
+            self.time_box.setVisible(False)
             return
 
-        # result is now just a list of station names
-        path = result
+        # result es ahora un diccionario con 'ruta', 'distancia', y 'tiempo'
+        ruta = result["ruta"]
+        ruta_cruda = result.get("ruta_cruda", []) # Obtener ruta con sufijos _L (ej: Observatorio_L1)
+        tiempo = result["tiempo"]
+        
+        # Mostrar la caja de tiempo estimado
+        self.time_box.setText(f"El tiempo estimado para llegar de {origen} a {destino} es de:\n{tiempo}")
+        self.time_box.setVisible(True)
         
         self.steps_list.clear()
-        for i, stationid in enumerate(path):
-            # Icono bonito en la lista
-            item = QtWidgets.QListWidgetItem(f"{i + 1}. {stationid}")
-            self.steps_list.addItem(item)
+        
+        # Si no tenemos ruta_cruda (por compatibilidad), usamos ruta normal pero sin colores específicos
+        if not ruta_cruda:
+            ruta_cruda = ruta
 
-        # Calculate number of stations (not transfers)
-        num_stations = len(path) - 1
-        self.lbl_resumen.setText(f"✔ Ruta calculada: {num_stations} estaciones")
+        contador_visual = 1
+        for i, nombre_estacion in enumerate(ruta):
+            # Si es la misma estación que la anterior, la saltamos visualmente (ya se mostró como transbordo)
+            if i > 0 and ruta[i] == ruta[i-1]:
+                continue
+
+            # Determinar color por defecto
+            color_hex = colores_lineas["Default"]
+            
+            # Obtener nodo crudo actual (con información de línea)
+            nodo_crudo = ruta_cruda[i]
+            
+            # Lógica para detectar transbordo:
+            # Si la estación actual tiene el mismo nombre simple que la anterior o la siguiente, es un transbordo
+            es_transbordo = False
+            
+            # Chequear estación anterior
+            if i > 0:
+                nombre_previo = ruta[i-1]
+                if nombre_previo == nombre_estacion:
+                    es_transbordo = True
+            
+            # Chequear estación siguiente
+            if i < len(ruta) - 1:
+                nombre_siguiente = ruta[i+1]
+                if nombre_siguiente == nombre_estacion:
+                    es_transbordo = True
+            
+            if es_transbordo:
+                # Si es transbordo, usamos el color naranja
+                color_hex = colores_lineas["Transfer"]
+            else:
+                # Extraer línea del nodo_crudo (ej: Observatorio_L1 -> L1)
+                if "_L" in nodo_crudo:
+                    partes = nodo_crudo.split("_L")
+                    if len(partes) > 1:
+                        codigo_linea = "L" + partes[1]
+                        # Obtener el color correspondiente a la línea
+                        color_hex = colores_lineas.get(codigo_linea, colores_lineas["Default"])
+            
+            # Crear icono con el color determinado
+            icono = self.crear_icono_circulo(color_hex)
+            
+            # Crear item de la lista
+            texto_item = f"{contador_visual}. {nombre_estacion}"
+            if es_transbordo:
+                texto_item += " (Transbordo)"
+            
+            elemento = QtWidgets.QListWidgetItem(texto_item)
+            elemento.setIcon(icono)
+            self.steps_list.addItem(elemento)
+            
+            contador_visual += 1
+
+        # Calcular número de estaciones (restamos 1 porque n estaciones son n-1 tramos)
+        num_estaciones = len(ruta) - 1
+        self.lbl_resumen.setText(f"✔ Ruta calculada: {num_estaciones} estaciones")
         self.map.draw_network(self.stations_xy, self.edges)
-        self.map.draw_route(self.stations_xy, path)
+        self.map.draw_route(self.stations_xy, ruta)
 
 
 # --------- VARIABLES GLOBALES PARA DATOS DEL METRO ---------
@@ -476,7 +605,3 @@ def main():
     win.on_load_data()
 
     sys.exit(app.exec())
-
-
-if __name__ == "__main__":
-    main()
