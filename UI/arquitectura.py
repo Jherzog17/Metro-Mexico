@@ -498,7 +498,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if not ruta_cruda:
             ruta_cruda = ruta
 
+        contador_visual = 1
         for i, nombre_estacion in enumerate(ruta):
+            # Si es la misma estación que la anterior, la saltamos visualmente (ya se mostró como transbordo)
+            if i > 0 and ruta[i] == ruta[i-1]:
+                continue
+
             # Determinar color por defecto
             color_hex = colores_lineas["Default"]
             
@@ -537,9 +542,11 @@ class MainWindow(QtWidgets.QMainWindow):
             icono = self.crear_icono_circulo(color_hex)
             
             # Crear item de la lista
-            elemento = QtWidgets.QListWidgetItem(f"{i + 1}. {nombre_estacion}")
+            elemento = QtWidgets.QListWidgetItem(f"{contador_visual}. {nombre_estacion}")
             elemento.setIcon(icono)
             self.steps_list.addItem(elemento)
+            
+            contador_visual += 1
 
         # Calcular número de estaciones (restamos 1 porque n estaciones son n-1 tramos)
         num_estaciones = len(ruta) - 1
