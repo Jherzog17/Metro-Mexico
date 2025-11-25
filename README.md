@@ -6,7 +6,7 @@ En esta practica hemos creado una aplicación que determina la ruta en metro má
 
 ```bash
 cd UI
-python3 interfaz_epica.py
+python3 arquitectura.py
 ```
 
 ## Librerías Necesarias
