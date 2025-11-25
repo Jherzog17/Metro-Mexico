@@ -60,19 +60,22 @@ class StationItem(QtWidgets.QGraphicsEllipseItem):
         # Esto hace que el texto siempre se vea del mismo tamaño, independientemente del zoom
         self.text_item.setFlag(QtWidgets.QGraphicsItem.ItemIgnoresTransformations)
 
-        # Ocultar inicialmente
+        # Ocultar inicialmente etiquetas de nombre
         self.text_item.setVisible(False)
 
+    # funcion para que al poner el cursor sobre un boton cambie a un dedito y se vea el texto
     def hoverEnterEvent(self, event):
         self.setCursor(Qt.PointingHandCursor)
         self.text_item.setVisible(True)
         #super().hoverEnterEvent(event)
 
+    # funcion para lo contrario que la anterior, al quitar el cursor vuelva a lo original
     def hoverLeaveEvent(self, event):
         self.setCursor(Qt.ArrowCursor)
         self.text_item.setVisible(False)
         #super().hoverLeaveEvent(event)
 
+# clase para el lado derecho de la interfaz (parte del mapa)
 class MapView(QtWidgets.QGraphicsView):
 
     def __init__(self, parent=None):
@@ -81,20 +84,24 @@ class MapView(QtWidgets.QGraphicsView):
         self.setScene(QtWidgets.QGraphicsScene(self))
         self.setBackgroundBrush(QBrush(QColor("#1B2A30")))
 
-        # CALIDAD GRÁFICA: Esto es vital para que no se vea pixelado
+        # CALIDAD GRÁFICA: para que no se vea pixelado
         self.setRenderHint(QPainter.Antialiasing)
         self.setRenderHint(QPainter.SmoothPixmapTransform)
 
         # Navegación
+        # que se pueda 'arrastrar' el mapa
         self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+        # que el zoom no sea al centro sino a donde esta el raton
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
+        # que al redimensionar la ventana, lo que está debajo del raton siga ahi
+        # nota: podemos probar a ver como se ve quitando esto pq no entiendo muy biwn quw hace
         self.setResizeAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
 
-        # Quitamos los bordes feos del widget
+        # Quitamos los bordes blancos, que no haya margen
         self.setFrameShape(QtWidgets.QFrame.NoFrame)
 
+    # funcion para hacer y deshacer zoom
     def wheelEvent(self, event):
-        # Zoom suave tipo Google Maps
         zoom_in_factor = 1.1
         zoom_out_factor = 1 / zoom_in_factor
         if event.angleDelta().y() < 0:
@@ -102,19 +109,15 @@ class MapView(QtWidgets.QGraphicsView):
         else:
             self.scale(zoom_out_factor, zoom_out_factor)
 
-    def draw_network(
-            self,
-            stations_xy: Dict[StationId, Point],
-            edges: List[Edge],
-            station_radius: float = 16.0,  # Estaciones un poco más grandes
-    ) -> None:
+    # funcion para dibujar los nodos (estaciones) y aristas (caminos)
+    def draw_network(self, stations_xy: Dict[StationId, Point], edges: List[Edge], station_radius: float = 16.0) -> None:
         scene = self.scene()
         scene.clear()
 
-        # 1. Dibujar conexiones (aristas) estilo "Línea de Metro"
-        # Usamos un color gris medio para las líneas inactivas
+        # 1. Dibujar aristas
         pen_edge = QPen(QColor("#B06821"))
-        pen_edge.setWidthF(5.0)  # Líneas más gruesas
+        pen_edge.setWidthF(5.0)
+        # nota: creo que se puede quitar esta linea, no lo puedo probar pq hay que hacer zoom eb el mapa:
         pen_edge.setCapStyle(Qt.RoundCap)  # Bordes de línea redondeados
 
         for a, b in edges:
@@ -123,38 +126,28 @@ class MapView(QtWidgets.QGraphicsView):
                 xb, yb = stations_xy[b]
                 scene.addLine(xa, ya, xb, yb, pen_edge)
 
-        # 2. Dibujar estaciones (nodos)
-        # Color blanco brillante con borde oscuro
+        # 2. Dibujar estaciones
         brush_station = QBrush(QColor("#E0FFFF"))
         pen_station = QPen(QColor("#511B18"))
         pen_station.setWidthF(10.0)
 
         for stationid, (x, y) in stations_xy.items():
-            # En lugar de scene.addEllipse, instanciamos nuestra clase
-            station_item = StationItem(
-                x,
-                y,
-                station_radius,
-                stationid,  # Pasamos el nombre
-                pen_station,
-                brush_station
-            )
-
-            # Añadimos el item a la escena
+            # En lugar de dibujar un circulito, instanciamos clase la clase Stationitem pa que aparezca el nombre
+            station_item = StationItem(x, y, station_radius, stationid, pen_station, brush_station)
             scene.addItem(station_item)
 
         self.fitInView(scene.itemsBoundingRect().marginsAdded(QtCore.QMarginsF(50, 50, 50, 50)), Qt.KeepAspectRatio)
 
+    # funcion para dibujar la ruta calculada
     def draw_route(self, stations_xy: Dict[StationId, Point], path: List[StationId]) -> None:
         if not path:
             return
         scene = self.scene()
 
-        # 3. Resaltar ruta (Efecto Neón)
-        # Usamos un color brillante (ej. Cian o Verde Ácido)
-        route_color = QColor("#ADD8E6")  # Cian eléctrico
+        # Usamos un azul clarito para que resalte
+        route_color = QColor("#ADD8E6")
 
-        # Efecto "Glow" (Simulado dibujando una línea gruesa semitransparente debajo)
+        # una línea gruesa debajo mas fuerte para que destaque mas
         pen_glow = QPen(route_color)
         pen_glow.setWidthF(12.0)
         pen_glow.setColor(QColor(3, 218, 198, 60))  # Mismo color, transparencia alta
@@ -170,17 +163,17 @@ class MapView(QtWidgets.QGraphicsView):
                 xa, ya = stations_xy[a]
                 xb, yb = stations_xy[b]
 
-                # Dibujar brillo
+                # Dibujar linea gruesa
                 scene.addLine(xa, ya, xb, yb, pen_glow)
                 # Dibujar línea central
                 scene.addLine(xa, ya, xb, yb, pen_route)
 
-                # --- Flecha direccional ---
+                # Flecha de direccion
                 dx = xb - xa
                 dy = yb - ya
                 angle = math.atan2(dy, dx)
 
-                # Posicionamos la flecha a mitad de camino, no al final, queda más limpio
+                # Posicionamos la flecha a mitad de camino
                 mid_x = (xa + xb) / 2
                 mid_y = (ya + yb) / 2
 
@@ -190,17 +183,18 @@ class MapView(QtWidgets.QGraphicsView):
                 p3 = QPointF(mid_x + arrow_size * math.cos(angle - 2.6), mid_y + arrow_size * math.sin(angle - 2.6))
 
                 arrow_head = QtWidgets.QGraphicsPolygonItem(QPolygonF([p1, p2, p3]))
-                arrow_head.setBrush(QBrush(QColor("#E0FFFF")))  # Flecha azul sobre línea brillante
+                arrow_head.setBrush(QBrush(QColor("#E0FFFF")))
                 arrow_head.setPen(Qt.NoPen)
                 scene.addItem(arrow_head)
 
-
+# clase para definir la ventana en general
 class MainWindow(QtWidgets.QMainWindow):
     route_requested = QtCore.Signal(str, str)
 
+    # definimos titulo y tamaño grande por defecto
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Metro CDMX – Navegador")
+        self.setWindowTitle("Metro CDMX")
         self.resize(1280, 800)
 
         # Hooks
@@ -213,7 +207,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self._build_ui()
         self._connect_signals()
 
-        # APLICAR EL CSS GLOBAL desde archivo externo
+        # aplicamos el CSS GLOBAL
         self.setStyleSheet(cargar_estilos())
 
     def _build_ui(self):
