@@ -68,4 +68,27 @@ Esto lo he hecho bascicamente primero realizando una funcion que se encargue del
 Por lo tanto los datos relamente que haran falta a Alba e Irene son los que estan en la utlima columna del csv de distancias_trasborods_para_aestrella, en la columna de Coste_Aestrella
 
 ## Tiempo en entrada a estaciones
-A estos datos y tiempo de trasbordo, también hay que añadirle otro dato, auque no tan considerable por su peso (en tiempo) en comparación por ejemplo de un trasborod largo o un trayecto en metro: el tiempo que tardan las personas en entrar en las estacion 
+A estos datos y tiempo de trasbordo, también hay que añadirle otro dato, auque no tan considerable por su peso (en tiempo) en comparación por ejemplo de un trasborod largo o un trayecto en metro: el tiempo que tardan las personas en entrar en las estacion.
+Al igual que para las distancias de los trasborodos, no existe  registro oficial público que cronometre este intervalo para cada estación, y de nuevo he optado por hacer una estimación basada en la ingeniería civil de la red, es decir, asumo que este tiempo extra varia según la profundidad física de la estación y su complejidad de trasborods y arquitectura.
+
+Para hacer esta clasificaicon he extraido los datos principalmente de 4 fuentes:
+Infraestructura del Sistema (STC Metro): 
+
+https://metro.cdmx.gob.mx/la-red
+
+Organismo Regulador de Transporte (ORT)
+
+https://www.ort.cdmx.gob.mx
+
+Artículo de investigación que citan datos del STC sobre la profundidad de estaciones
+
+https://www.sopitas.com/noticias/estacion-linea-mas-profunda-metro-cdmx-bunker/
+
+video Las 15 Interestaciones MÁS LARGAS del Metro CDMX.
+https://www.youtube.com/watch?v=vIx_7eLZQ3g
+
+Con ello he podido sacar mi clasificacion que consiste en, las estaciones superficiales (como en la Línea A) en las que les he puesto  un tiempo mínimo de 1.5 minutos por su acceso directo. Por otro lado, las estaciones elevadas y las subterráneas estándar (construidas a cielo abierto) que les he asignado  tiempos de entre 2.5 y 3.5 minutos y otras estaciones que tienen un extra, las de "túnel profundo (Línea 7 y tramo oeste de la Línea 12) y a los Centros de transferencia m odal (CETRAM).
+Tambien he de comentar que he asignado el tiempo basándome en la línea más profunda o compleja de ese grupo (por ejemplo, en Tacubaya, aunque la L1 es superficial, la entrada se le pone tiempo por la L7 que es profunda).
+
+Finalmente una vez con toda la informacion lo he juntado en un csv, adjuntando cada estaion con su correspondiente tiempo de entrada aproxiamdo.
+
