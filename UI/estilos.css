@@ -99,3 +99,23 @@ QStatusBar {
     background-color: #121212;
     color: #777;
 }
+
+/*color del panel de información de la derecha */
+
+/* 1. Fondo del panel (Dorado) */
+QWidget#InfoPanel {
+    background-color: #131d22; 
+    border-left: 2px solid #333; 
+}
+
+/* 2. Forzar el color de TODO el texto dentro del panel */
+QWidget#InfoPanel QLabel {
+    color: #B06821 !important;   /* !important vence a cualquier estilo de Python */
+    background-color: transparent !important;
+}
+
+/* 3. Si tienes botones dentro de ese panel y quieres cambiarlos también */
+QWidget#InfoPanel QPushButton {
+    background-color: #1b2a30;
+    color: #305853;
+}

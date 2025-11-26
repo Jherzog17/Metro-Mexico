@@ -15,4 +15,4 @@ sys.path.insert(0, str(ui_path))
 from UI.arquitectura import main
 
 if __name__ == "__main__":
-    main()
+    main()  

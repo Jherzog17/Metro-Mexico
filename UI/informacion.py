@@ -78,7 +78,7 @@ class WidgetItemLineaTiempo(QtWidgets.QWidget):
         # Fuente Principal
         fuente_principal = QtGui.QFont("Segoe UI", 12, QtGui.QFont.Bold)
         painter.setFont(fuente_principal)
-        painter.setPen(QtGui.QColor("#305853"))
+        painter.setPen(QtGui.QColor("#b06821"))
         
         fm_principal = QtGui.QFontMetrics(fuente_principal)
         alto_principal = fm_principal.height()
@@ -123,16 +123,15 @@ class InfoPanel(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         # Estilo del panel lateral
-        self.setStyleSheet("background-color: white; border-left: 1px solid #ccc;")
+        #   self.setStyleSheet("background-color: white; border-left: 1px solid #ccc;")
         self.setFixedWidth(400) # Ancho fijo para el panel lateral
-        
         self.layout_principal = QtWidgets.QVBoxLayout(self)
         self.layout_principal.setSpacing(10)
         self.layout_principal.setContentsMargins(20, 20, 20, 20)
         
         # Header
         self.lbl_total = QtWidgets.QLabel()
-        self.lbl_total.setStyleSheet("font-size: 20px; font-weight: 900; color: #305853; margin-bottom: 10px;")
+        self.lbl_total.setStyleSheet("font-size: 20px; font-weight: 900; color: #9e2c21; margin-bottom: 10px;")
         self.lbl_total.setAlignment(Qt.AlignCenter)
         self.lbl_total.setWordWrap(True)
         self.layout_principal.addWidget(self.lbl_total)
@@ -141,7 +140,10 @@ class InfoPanel(QtWidgets.QWidget):
         self.scroll = QtWidgets.QScrollArea()
         self.scroll.setWidgetResizable(True)
         self.scroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.scroll.setStyleSheet("background: transparent; background-color: transparent;")
         self.widget_contenido = QtWidgets.QWidget()
+        self.widget_contenido.setAttribute(Qt.WA_StyledBackground, True)
+        self.widget_contenido.setStyleSheet("background-color: #1b2a30; border-radius: 15px;")
         self.layout_scroll = QtWidgets.QVBoxLayout(self.widget_contenido)
         self.layout_scroll.setSpacing(0)
         self.layout_scroll.setContentsMargins(0, 0, 0, 0)
@@ -153,8 +155,8 @@ class InfoPanel(QtWidgets.QWidget):
         self.btn_cerrar.setCursor(Qt.PointingHandCursor)
         self.btn_cerrar.setStyleSheet("""
             QPushButton {
-                background-color: #305853; 
-                color: white; 
+                background-color: #b06821; 
+                color:#AAAAAA ; 
                 padding: 10px; 
                 border-radius: 5px;
                 font-weight: bold;

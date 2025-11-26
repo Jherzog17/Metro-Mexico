@@ -368,8 +368,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.time_box.setWordWrap(True)
         self.time_box.setStyleSheet("""
             QLabel {
-                background-color: #B06821;
-                color: #511B18;
+                background-color: #511b18;
+                color: #1b2a30;
                 font-size: 18px;
                 padding: 14px 14px;
                 border-radius: 10px;
@@ -390,6 +390,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Panel de información (derecha, oculto inicialmente)
         self.info_panel = InfoPanel(self)
+        self.info_panel.setObjectName("InfoPanel")
+        self.info_panel.setAttribute(Qt.WA_StyledBackground, True)
         self.info_panel.hide()
         main_layout.addWidget(self.info_panel)
 
