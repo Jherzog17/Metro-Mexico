@@ -6,7 +6,7 @@ Boulevard Puerto Aéreo_L1,Balbuena_L1,425.5450349614776,1
 Balbuena_L1,Moctezuma_L1,677.4858350034809,1
 Moctezuma_L1,San Lázaro_L1,809.4470433906556,1
 San Lázaro_L1,Candelaria_L1,1122.6455242663542,1
-Candelaria_L1,Merced_L1,936.4970444396963,1
+Candelaria_L1,Merced_L1,936.4970444396964,1
 Merced_L1,Pino Suárez_L1,791.2065881264317,1
 Pino Suárez_L1,Isabel la Católica_L1,651.569910097677,1
 Isabel la Católica_L1,Salto del Agua_L1,412.6813263212291,1
@@ -23,12 +23,12 @@ General Anaya_L2,Ermita_L2,1157.7147408909557,2
 Ermita_L2,Portales_L2,725.7891153913685,2
 Portales_L2,Nativitas_L2,1246.1666712957804,2
 Nativitas_L2,Villa de Cortés_L2,728.2673248809256,2
-Villa de Cortés_L2,Xola_L2,1018.0993418456821,2
-Xola_L2,Viaducto_L2,468.05085687058374,2
+Villa de Cortés_L2,Xola_L2,1018.099341845682,2
+Xola_L2,Viaducto_L2,468.0508568705837,2
 Viaducto_L2,Chabacano_L2,1094.8093833087437,2
 Chabacano_L2,San Antonio Abad_L2,592.5296728235619,2
 San Antonio Abad_L2,Pino Suárez_L2,1026.5195879831658,2
-Pino Suárez_L2,Zócalo_L2,1030.1228088857795,2
+Pino Suárez_L2,Zócalo_L2,1030.1228088857797,2
 Zócalo_L2,Allende_L2,559.5489050645741,2
 Allende_L2,Bellas Artes_L2,512.1832525014298,2
 Bellas Artes_L2,Hidalgo_L2,745.5948110977607,2
@@ -40,8 +40,8 @@ Colegio Militar_L2,Popotla_L2,486.03746236532686,2
 Popotla_L2,Cuitláhuac_L2,938.0853957515126,2
 Cuitláhuac_L2,Tacuba_L2,823.7383022326468,2
 Tacuba_L2,Panteones_L2,1483.3355956054647,2
-Panteones_L2,Cuatro Caminos_L2,1803.8004581402886,2
-Universidad_L3,Copilco_L3,1547.0634932577887,3
+Panteones_L2,Cuatro Caminos_L2,1803.8004581402888,2
+Universidad_L3,Copilco_L3,1547.0634932577889,3
 Copilco_L3,Miguel Ángel de Quevedo_L3,1477.750546838016,3
 Miguel Ángel de Quevedo_L3,Viveros y  Derechos Humanos_L3,899.2343245040141,3
 Viveros y  Derechos Humanos_L3,Coyoacán_L3,1089.0519466813946,3
@@ -58,7 +58,7 @@ Juárez_L3,Hidalgo_L3,590.2326775054094,3
 Hidalgo_L3,Guerrero_L3,819.4051638951094,3
 Guerrero_L3,Tlatelolco_L3,1046.080375342882,3
 Tlatelolco_L3,La Raza_L3,1938.830023556495,3
-La Raza_L3,Potrero_L3,1047.0044090970819,3
+La Raza_L3,Potrero_L3,1047.004409097082,3
 Potrero_L3,Deportivo 18 de Marzo_L3,1114.963398247782,3
 Deportivo 18 de Marzo_L3,Indios Verdes_L3,1240.8833019262054,3
 Santa Anita_L4,Jamaica_L4,826.287763574403,4
@@ -69,13 +69,13 @@ Morelos_L4,Canal del Norte_L4,1060.7940206558258,4
 Canal del Norte_L4,Consulado_L4,1032.4322901703222,4
 Consulado_L4,Bondojito_L4,637.2163967632096,4
 Bondojito_L4,Talismán_L4,1266.7050442106265,4
-Talismán_L4,Martín Carrera_L4,1204.4826616023759,4
+Talismán_L4,Martín Carrera_L4,1204.482661602376,4
 Pantitlán_L5,Hangares_L5,1881.72649964016,5
 Hangares_L5,Terminal Aérea_L5,1309.9734250179506,5
 Terminal Aérea_L5,Oceanía_L5,1386.1235097005176,5
 Oceanía_L5,Aragón_L5,1139.4022601009624,5
-Aragón_L5,Eduardo Molina_L5,1180.9164837350195,5
-Eduardo Molina_L5,Consulado_L5,966.5470048836229,5
+Aragón_L5,Eduardo Molina_L5,1180.9164837350197,5
+Eduardo Molina_L5,Consulado_L5,966.5470048836228,5
 Consulado_L5,Valle Gómez_L5,576.3901144692768,5
 Valle Gómez_L5,Misterios_L5,1268.467295688156,5
 Misterios_L5,La Raza_L5,1143.347751058122,5
@@ -85,7 +85,7 @@ Instituto del Petróleo_L5,Politécnico_L5,1422.8732967839355,5
 Martín Carrera_L6,La Villa y Basílica_L6,1339.534678480296,6
 La Villa y Basílica_L6,Deportivo 18 de Marzo_L6,610.3862951306559,6
 Deportivo 18 de Marzo_L6,Lindavista_L6,1137.8851152272846,6
-Lindavista_L6,Instituto del Petróleo_L6,1285.1625381935899,6
+Lindavista_L6,Instituto del Petróleo_L6,1285.16253819359,6
 Instituto del Petróleo_L6,Vallejo_L6,791.5956079004429,6
 Vallejo_L6,Norte 45_L6,1246.294622788689,6
 Norte 45_L6,Ferrería y Arena Ciudad de México_L6,1198.6269496927214,6
@@ -98,24 +98,24 @@ San Antonio_L7,San Pedro de los Pinos_L7,594.8505323292936,7
 San Pedro de los Pinos_L7,Tacubaya_L7,1270.8664929182728,7
 Tacubaya_L7,Constituyentes_L7,1256.8622265823856,7
 Constituyentes_L7,Auditorio_L7,1771.488210717268,7
-Auditorio_L7,Polanco_L7,474.21112615434555,7
+Auditorio_L7,Polanco_L7,474.2111261543456,7
 Polanco_L7,San Joaquín_L7,1348.6058016532393,7
 San Joaquín_L7,Tacuba_L7,1826.5669702683465,7
 Tacuba_L7,Refinería_L7,899.617983264405,7
-Refinería_L7,Camarones_L7,2041.9643872679005,7
-Camarones_L7,Aquiles Serdán_L7,971.7666141123841,7
-Aquiles Serdán_L7,El Rosario_L7,1845.0947176519633,7
+Refinería_L7,Camarones_L7,2041.9643872679003,7
+Camarones_L7,Aquiles Serdán_L7,971.766614112384,7
+Aquiles Serdán_L7,El Rosario_L7,1845.0947176519635,7
 Constitución de 1917_L8,UAM-I_L8,1424.3797281536486,8
 UAM-I_L8,Cerro de la Estrella_L8,1082.781552332134,8
-Cerro de la Estrella_L8,Iztapalapa_L8,951.7649658386839,8
+Cerro de la Estrella_L8,Iztapalapa_L8,951.764965838684,8
 Iztapalapa_L8,Atlalilco_L8,781.5458631008077,8
 Atlalilco_L8,Escuadrón 201_L8,2221.732452118389,8
 Escuadrón 201_L8,Aculco_L8,794.6839257351163,8
 Aculco_L8,Apatlaco_L8,677.5950551850156,8
 Apatlaco_L8,Iztacalco_L8,864.289410343433,8
 Iztacalco_L8,Coyuya_L8,1343.3116126886844,8
-Coyuya_L8,Santa Anita_L8,929.5321217843813,8
-Santa Anita_L8,La Viga_L8,983.1624684473259,8
+Coyuya_L8,Santa Anita_L8,929.5321217843812,8
+Santa Anita_L8,La Viga_L8,983.162468447326,8
 La Viga_L8,Chabacano_L8,904.732594526863,8
 Chabacano_L8,Obrera_L8,1185.9251029678849,8
 Obrera_L8,Doctores_L8,1082.8122203541918,8
@@ -126,20 +126,20 @@ Bellas Artes_L8,Garibaldi y Lagunilla_L8,714.8808714000538,8
 Pantitlán_L9,Puebla_L9,1615.1167459767055,9
 Puebla_L9,Ciudad Deportiva_L9,781.62753070068,9
 Ciudad Deportiva_L9,Velódromo_L9,1427.7906578277152,9
-Velódromo_L9,Mixiuhca_L9,967.4609852447817,9
+Velódromo_L9,Mixiuhca_L9,967.4609852447816,9
 Mixiuhca_L9,Jamaica_L9,878.2344034181278,9
 Jamaica_L9,Chabacano_L9,1412.0641971979887,9
 Chabacano_L9,Lázaro Cárdenas_L9,1141.5579414632653,9
 Lázaro Cárdenas_L9,Centro Médico_L9,1183.440616834622,9
-Centro Médico_L9,Chilpancingo_L9,1319.8211941573143,9
+Centro Médico_L9,Chilpancingo_L9,1319.8211941573145,9
 Chilpancingo_L9,Patriotismo_L9,939.5251342167657,9
 Patriotismo_L9,Tacubaya_L9,1281.761543553224,9
 La Paz_LA,Los Reyes_LA,2194.969509050957,A
 Los Reyes_LA,Santa Marta_LA,1755.8577235039215,A
-Santa Marta_LA,Acatitla_LA,1422.5640449846405,A
+Santa Marta_LA,Acatitla_LA,1422.5640449846403,A
 Acatitla_LA,Penón Viejo_LA,1348.5094870560542,A
 Penón Viejo_LA,Guelatao_LA,2355.5794631288527,A
-Guelatao_LA,Tepalcates_LA,1312.7900679509557,A
+Guelatao_LA,Tepalcates_LA,1312.7900679509555,A
 Tepalcates_LA,Canal de San Juan_LA,1619.6176024701194,A
 Canal de San Juan_LA,Agrícola Oriental_LA,1410.5572602181328,A
 Agrícola Oriental_LA,Pantitlán_LA,1464.8366784372038,A
@@ -158,64 +158,64 @@ Bosque de Aragón_LB,Villa de Aragón_LB,1114.2262125493974,B
 Villa de Aragón_LB,Nezahualcóyotl_LB,1471.3872095432816,B
 Nezahualcóyotl_LB,Impulsora_LB,1549.8222110187403,B
 Impulsora_LB,Río de los Remedios_LB,596.1025147370824,B
-Río de los Remedios_LB,Múzquiz_LB,1300.6682101582473,B
+Río de los Remedios_LB,Múzquiz_LB,1300.6682101582471,B
 Múzquiz_LB,Ecatepec_LB,1628.940734465463,B
 Ecatepec_LB,Olímpica_LB,745.6404751004205,B
 Olímpica_LB,Plaza Aragón_LB,858.9653993568305,B
 Plaza Aragón_LB,Ciudad Azteca_LB,631.4623466426982,B
-Tláhuac_L12,Tlaltenco_L12,1531.5522003134263,12
-Tlaltenco_L12,Zapotitlán_L12,1256.3976811634245,12
+Tláhuac_L12,Tlaltenco_L12,1531.5522003134265,12
+Tlaltenco_L12,Zapotitlán_L12,1256.3976811634243,12
 Zapotitlán_L12,Nopalera_L12,1426.5758820704664,12
-Nopalera_L12,Olivos_L12,1510.2818539213565,12
+Nopalera_L12,Olivos_L12,1510.2818539213563,12
 Olivos_L12,Tezonco_L12,639.9991457053907,12
 Tezonco_L12,Periférico Oriente_L12,1694.3766755242366,12
 Periférico Oriente_L12,Calle 11_L12,1262.5621464946053,12
 Calle 11_L12,Lomas Estrella_L12,1054.0291903408547,12
 Lomas Estrella_L12,San Andrés Tomatlán_L12,1208.4232074731149,12
 San Andrés Tomatlán_L12,Culhuacán_L12,1136.8057362372328,12
-Culhuacán_L12,Atlalilco_L12,1830.0459467089913,12
-Atlalilco_L12,Mexicaltzingo_L12,1883.4700498804086,12
+Culhuacán_L12,Atlalilco_L12,1830.045946708992,12
+Atlalilco_L12,Mexicaltzingo_L12,1883.4700498804089,12
 Mexicaltzingo_L12,Ermita_L12,1973.110718291713,12
 Ermita_L12,Eje Central_L12,1305.4066789623405,12
-Eje Central_L12,Parque de los Venados_L12,1332.1764353652213,12
+Eje Central_L12,Parque de los Venados_L12,1332.176435365221,12
 Parque de los Venados_L12,Zapata_L12,631.85047492151,12
 Zapata_L12,Hospital 20 de Noviembre_L12,785.8993988215775,12
 Hospital 20 de Noviembre_L12,Insurgentes Sur_L12,543.9952278841345,12
 Insurgentes Sur_L12,Mixcoac_L12,1021.633389980905,12
-Pantitlán_L1,Pantitlán_L5,0,1-5
-Pantitlán_L1,Pantitlán_L9,0,1-9
-Pantitlán_L1,Pantitlán_LA,0,1-A
-Pantitlán_L5,Pantitlán_L9,0,5-9
-Pantitlán_L5,Pantitlán_LA,0,5-A
-Pantitlán_L9,Pantitlán_LA,0,9-A
-San Lázaro_L1,San Lázaro_LB,0,1-B
-Candelaria_L1,Candelaria_L4,0,1-4
-Pino Suárez_L1,Pino Suárez_L2,0,1-2
-Salto del Agua_L1,Salto del Agua_L8,0,1-8
-Balderas_L1,Balderas_L3,0,1-3
-Tacubaya_L1,Tacubaya_L7,0,1-7
-Tacubaya_L1,Tacubaya_L9,0,1-9
-Tacubaya_L7,Tacubaya_L9,0,7-9
-Ermita_L2,Ermita_L12,0,12-2
-Chabacano_L2,Chabacano_L8,0,2-8
-Chabacano_L2,Chabacano_L9,0,2-9
-Chabacano_L8,Chabacano_L9,0,8-9
-Bellas Artes_L2,Bellas Artes_L8,0,2-8
-Hidalgo_L2,Hidalgo_L3,0,2-3
-Tacuba_L2,Tacuba_L7,0,2-7
-Zapata_L3,Zapata_L12,0,12-3
-Centro Médico_L3,Centro Médico_L9,0,3-9
-Guerrero_L3,Guerrero_LB,0,3-B
-La Raza_L3,La Raza_L5,0,3-5
-Deportivo 18 de Marzo_L3,Deportivo 18 de Marzo_L6,0,3-6
-Santa Anita_L4,Santa Anita_L8,0,4-8
-Jamaica_L4,Jamaica_L9,0,4-9
-Morelos_L4,Morelos_LB,0,4-B
-Consulado_L4,Consulado_L5,0,4-5
-Oceanía_L5,Oceanía_LB,0,5-B
-Instituto del Petróleo_L5,Instituto del Petróleo_L6,0,5-6
-Martín Carrera_L6,Martín Carrera_L4,0,4-6
-Mixcoac_L7,Mixcoac_L12,0,12-7
-Atlalilco_L8,Atlalilco_L12,0,12-8
-Garibaldi y Lagunilla_LB,Garibaldi y Lagunilla_L8,0,8-B
-El Rosario_L6,El Rosario_L7,0,6-7
+Pantitlán_L1,Pantitlán_L5,3645.8333333333335,1-5
+Pantitlán_L1,Pantitlán_L9,3645.8333333333335,1-9
+Pantitlán_L1,Pantitlán_LA,4389.583333333334,1-A
+Pantitlán_L5,Pantitlán_L9,2552.083333333333,5-9
+Pantitlán_L5,Pantitlán_LA,3135.416666666667,5-A
+Pantitlán_L9,Pantitlán_LA,3645.8333333333335,9-A
+San Lázaro_L1,San Lázaro_LB,2996.875,1-B
+Candelaria_L1,Candelaria_L4,2573.958333333333,1-4
+Pino Suárez_L1,Pino Suárez_L2,1458.3333333333337,1-2
+Salto del Agua_L1,Salto del Agua_L8,1822.9166666666667,1-8
+Balderas_L1,Balderas_L3,2005.2083333333333,1-3
+Tacubaya_L1,Tacubaya_L7,2916.666666666667,1-7
+Tacubaya_L1,Tacubaya_L9,2916.666666666667,1-9
+Tacubaya_L7,Tacubaya_L9,2916.666666666667,7-9
+Ermita_L2,Ermita_L12,4265.625,12-2
+Chabacano_L2,Chabacano_L8,2734.375,2-8
+Chabacano_L2,Chabacano_L9,2734.375,2-9
+Chabacano_L8,Chabacano_L9,2734.375,8-9
+Bellas Artes_L2,Bellas Artes_L8,525.0,2-8
+Hidalgo_L2,Hidalgo_L3,1276.0416666666667,2-3
+Tacuba_L2,Tacuba_L7,2187.5,2-7
+Zapata_L3,Zapata_L12,1822.9166666666667,12-3
+Centro Médico_L3,Centro Médico_L9,2734.375,3-9
+Guerrero_L3,Guerrero_LB,1822.9166666666667,3-B
+La Raza_L3,La Raza_L5,3653.125,3-5
+Deportivo 18 de Marzo_L3,Deportivo 18 de Marzo_L6,1822.9166666666667,3-6
+Santa Anita_L4,Santa Anita_L8,1822.9166666666667,4-8
+Jamaica_L4,Jamaica_L9,2800.0,4-9
+Morelos_L4,Morelos_LB,1458.3333333333337,4-B
+Consulado_L4,Consulado_L5,3558.333333333333,4-5
+Oceanía_L5,Oceanía_LB,430.20833333333337,5-B
+Instituto del Petróleo_L5,Instituto del Petróleo_L6,3448.958333333333,5-6
+Martín Carrera_L6,Martín Carrera_L4,1458.3333333333337,4-6
+Mixcoac_L7,Mixcoac_L12,3500.0,12-7
+Atlalilco_L8,Atlalilco_L12,6423.958333333334,12-8
+Garibaldi y Lagunilla_LB,Garibaldi y Lagunilla_L8,1093.75,8-B
+El Rosario_L6,El Rosario_L7,269.7916666666667,6-7

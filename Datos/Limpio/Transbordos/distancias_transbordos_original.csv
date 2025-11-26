@@ -1,0 +1,38 @@
+Origen,Destino,Distancia,Linea,Comentarios
+Pantitlán_L1,Pantitlán_L5,500,1-5,# Estimado transbordo laro.
+Pantitlán_L1,Pantitlán_L9,500,1-9,# Estimado transbordo largo
+Pantitlán_L1,Pantitlán_LA,602,1-A,# Exacto: 602 m (dato oficial STC).
+Pantitlán_L5,Pantitlán_L9,350,5-9,# Estimado medio-largo.
+Pantitlán_L5,Pantitlán_LA,430,5-A,# Datos medidos 
+Pantitlán_L9,Pantitlán_LA,500,9-A,# Estimado transbordo largo.
+San Lázaro_L1,San Lázaro_LB,411,1-B,# Exacto: 411 m (dato oficial STC).
+Candelaria_L1,Candelaria_L4,353,1-4,# Exacto: 353 m (dato oficial STC)
+Pino Suárez_L1,Pino Suárez_L2,200,1-2,# Estimado rango 150-250 m.
+Salto del Agua_L1,Salto del Agua_L8,250,1-8,# Estimado rango 200-300 m.
+Balderas_L1,Balderas_L3,275,1-3,# Estimado rango 200-350 m.
+Tacubaya_L1,Tacubaya_L7,400,1-7,# Estimado rang 300-500 m (profundo).
+Tacubaya_L1,Tacubaya_L9,400,1-9,# Estimado mismo criterio.
+Tacubaya_L7,Tacubaya_L9,400,7-9,# Estimado mismo criterio.
+Ermita_L2,Ermita_L12,585,12-2,# Exacto: 585 m (dato oficial STC).
+Chabacano_L2,Chabacano_L8,375,2-8,# Estimad se ajusta al orden de magnitud del dato oficial.
+Chabacano_L2,Chabacano_L9,375,2-9,# Estimado mismo criterio.
+Chabacano_L8,Chabacano_L9,375,8-9,# Estimado mismo recorrido físico.
+Bellas Artes_L2,Bellas Artes_L8,72,2-8,# Exacto dato oficial STC. Transbordo corto (2 min).
+Hidalgo_L2,Hidalgo_L3,175,2-3,# Estimado rango 150-200 m. STC sólo publica tiempo (1 min).
+Tacuba_L2,Tacuba_L7,300,2-7,# Estimado rango 250-350 m.
+Zapata_L3,Zapata_L12,250,12-3,# Estimado túnel profundo.
+Centro Médico_L3,Centro Médico_L9,375,3-9,# Estimado rango 300-450 m.
+Guerrero_L3,Guerrero_LB,250,3-B,# Estimado rango 200-300 m.
+La Raza_L3,La Raza_L5,501,3-5,# Exacto 501 m (dato oficial STC).
+Deportivo 18 de Marzo_L3,Deportivo 18 de Marzo_L6,250,3-6,#Estimado valor medio.
+Santa Anita_L4,Santa Anita_L8,250,4-8,# Estimado similitud con otros transbordos medianos.
+Jamaica_L4,Jamaica_L9,384,4-9,# Exacto: 384 m (dato oficial STC).
+Morelos_L4,Morelos_LB,200,4-B,# Estimado rango 150-250 m.
+Consulado_L4,Consulado_L5,488,4-5,# Exacto 488 m (dato oficial STC). 
+Oceanía_L5,Oceanía_LB,59,5-B,# Exacto dato oficial STC. Transbordo corto (1 min).
+Instituto del Petróleo_L5,Instituto del Petróleo_L6,473,5-6,# Exacto 473 m (dato oficial STC). 
+Martín Carrera_L6,Martín Carrera_L4,200,4-6,# Estimado rango 150-250 m.
+Mixcoac_L7,Mixcoac_L12,480,12-7,# Estimado 5-7 min caminando.
+Atlalilco_L8,Atlalilco_L12,881,12-8,# Exacto: 881 m (dato oficial STC).
+Garibaldi y Lagunilla_LB,Garibaldi y Lagunilla_L8,150,8-B,# Estimado rango 100-200 m (pasillo corto).
+El Rosario_L6,El Rosario_L7,37,6-7,# Exacto dato oficial STC. Transbordo muy corto (1 min).
