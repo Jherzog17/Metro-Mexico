@@ -56,9 +56,8 @@ def convertir_distancia_a_tiempo(distancia_metros):
     """
     velocidad_ms=35*1000/3600
     tiempo=(distancia_metros/velocidad_ms)
-    minutos = int(tiempo // 60)
-    segundos = tiempo % 60
-    return str(minutos) + " minutos y " + str(round(segundos)) + " segundos"
+    minutos = int(round(tiempo / 60))
+    return str(minutos) + " min"
 
 
 #Función que ejecuta A*
