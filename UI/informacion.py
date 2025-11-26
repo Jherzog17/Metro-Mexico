@@ -131,7 +131,7 @@ class InfoPanel(QtWidgets.QWidget):
         
         # Header
         self.lbl_total = QtWidgets.QLabel()
-        self.lbl_total.setStyleSheet("font-size: 20px; font-weight: 900; color: #9e2c21; margin-bottom: 10px;")
+        self.lbl_total.setStyleSheet("font-size: 20px; font-weight: 900; color: #b06821; margin-bottom: 10px;")
         self.lbl_total.setAlignment(Qt.AlignCenter)
         self.lbl_total.setWordWrap(True)
         self.layout_principal.addWidget(self.lbl_total)
@@ -155,7 +155,7 @@ class InfoPanel(QtWidgets.QWidget):
         self.btn_cerrar.setCursor(Qt.PointingHandCursor)
         self.btn_cerrar.setStyleSheet("""
             QPushButton {
-                background-color: #b06821; 
+                background-color: #511b18; 
                 color:#AAAAAA ; 
                 padding: 10px; 
                 border-radius: 5px;
