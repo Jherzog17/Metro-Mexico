@@ -332,7 +332,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Botones secundarios
         btn_row = QtWidgets.QHBoxLayout()
-        self.btn_info = QtWidgets.QPushButton("Información")
+        self.btn_info = QtWidgets.QPushButton("Borrar campos")
         self.btn_info.setCursor(Qt.PointingHandCursor)
         self.btn_info.setStyleSheet("background-color: #305853; color: white;")
         self.btn_limpiar = QtWidgets.QPushButton("      Limpiar      ")
@@ -395,14 +395,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.info_panel.hide()
         main_layout.addWidget(self.info_panel)
 
-        # Barra de estado minimalista
+        # Barra de estado minimalista con texto centrado
         self.status = QtWidgets.QStatusBar()
+        self.status_label = QtWidgets.QLabel("Cada billete de metro cuesta $5 pesos")
+        self.status_label.setAlignment(Qt.AlignCenter)
+        self.status_label.setStyleSheet("color: #AAAAAA;")
+        self.status.addWidget(self.status_label, 1)  # El 1 hace que ocupe todo el espacio
         self.setStatusBar(self.status)
 
     def _connect_signals(self):
         self.btn_calcular.clicked.connect(self.on_calculate)
         self.btn_limpiar.clicked.connect(self.on_clear)
-        self.btn_info.clicked.connect(self.on_show_info)
+        self.btn_info.clicked.connect(self.on_clear_fields)
         self.route_requested.connect(self._handle_route_requested)
 
     # ---------- Integración (IGUAL QUE ANTES) ----------
@@ -430,7 +434,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.cmb_destino.addItems(self.stations_list)
 
             self.map.draw_network(self.stations_xy, self.edges)
-            self.status.showMessage(f"Sistema en línea • {len(stations)} estaciones operativas")
         except Exception as e:
             self.status.showMessage(f"Error: {str(e)}")
 
@@ -568,30 +571,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.info_panel.show()
 
     @QtCore.Slot()
-    def on_show_info(self):
-        if not self.last_route_result:
-            QtWidgets.QMessageBox.warning(self, "Información", "Primero debes calcular una ruta.")
-            return
-
-        origen = self.cmb_origen.currentText()
-        destino = self.cmb_destino.currentText()
-
-        # Obtener tiempo de entrada
-        tiempo_entrada = self.tiempos_entrada.get(origen, "Desconocido")
-        if isinstance(tiempo_entrada, (int, float)):
-            tiempo_entrada_str = f"{tiempo_entrada} min"
-        else:
-            tiempo_entrada_str = str(tiempo_entrada)
-
-        # Obtener tiempo de salida (usamos la misma tabla que entrada)
-        tiempo_salida = self.tiempos_entrada.get(destino, "Desconocido")
-        if isinstance(tiempo_salida, (int, float)):
-            tiempo_salida_str = f"{tiempo_salida} min"
-        else:
-            tiempo_salida_str = str(tiempo_salida)
-
-        self.info_panel.update_info(origen, destino, self.last_route_result, tiempo_entrada_str, tiempo_salida_str)
-        self.info_panel.show()
+    def on_clear_fields(self):
+        """Limpia los campos de origen y destino."""
+        self.cmb_origen.setCurrentIndex(-1)
+        self.cmb_destino.setCurrentIndex(-1)
 
 
 # --------- VARIABLES GLOBALES PARA DATOS DEL METRO ---------
