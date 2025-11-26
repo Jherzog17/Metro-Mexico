@@ -362,12 +362,26 @@ class MainWindow(QtWidgets.QMainWindow):
         map_layout.setContentsMargins(0, 0, 0, 0)
         map_layout.setSpacing(0)
 
-
+        # Caja de tiempo estimado (inicialmente oculta)
+        self.time_box = QtWidgets.QLabel()
+        self.time_box.setAlignment(Qt.AlignCenter)
+        self.time_box.setWordWrap(True)
+        self.time_box.setStyleSheet("""
+            QLabel {
+                background-color: #B06821;
+                color: #511B18;
+                font-size: 18px;
+                padding: 14px 14px;
+                border-radius: 10px;
+                margin: 20px 150px;
+            }
+        """)
+        self.time_box.setVisible(False)  # Oculto por defecto
 
         self.map = MapView()
 
         # Añadir widgets al contenedor del mapa
-       
+        map_layout.addWidget(self.time_box)
         map_layout.addWidget(self.map, 1)
 
         # Añadir al layout principal
