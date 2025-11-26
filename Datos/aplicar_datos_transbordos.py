@@ -1,7 +1,13 @@
 import pandas as pd
+
+from pathlib import Path
+
+# Obtener la ruta raíz del proyecto
+directorio_root = Path(__file__).parent.parent
+
 # Rutas relativas desde la raíz del proyecto
-RUTA_INTRODUCIR_DATOS= "Datos/Limpio/distancias_reales_transbordos.csv"
-RUTA_DATOS_TRANSBORDOS = "Datos/Limpio/distancias_transbordos_para_aestrella.csv"
+RUTA_INTRODUCIR_DATOS = directorio_root / "Datos/Limpio/distancias_reales_transbordos.csv"
+RUTA_DATOS_TRANSBORDOS = directorio_root / "Datos/Limpio/Transbordos/distancias_transbordos_para_aestrella.csv"
 
 # Cargar el fichero grande (todas las aristas, con 0 en los transbordos)
 df_main = pd.read_csv(RUTA_INTRODUCIR_DATOS)
