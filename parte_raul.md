@@ -67,6 +67,8 @@ Con este factor de conversion bastante sencillo, las distancias de trasbordo se 
 Esto lo he hecho bascicamente primero realizando una funcion que se encargue del factor de converiosn, y posteriormente otras que recoja los dato sde las distancias reales de los trasbordos, los pase por la funcion de conversion y luego se devuelvan en un csv apto ya para procesar la información en el algoritmo A*  todo ello esta contenido en conversion_datos_trasbordos.py
 Por lo tanto los datos relamente que haran falta a Alba e Irene son los que estan en la utlima columna del csv de distancias_trasborods_para_aestrella, en la columna de Coste_Aestrella
 
+Por último he puesto los datos de distancias_rtasbordos_para_aestrella (concretamente la columna Coste_Aestrella) en el dataset inicial de distancias_reales_transbordos, con el fichero de aplicar_datos_trasbordos donde he filtrado primero que filas tenian un  0 en la distancia(es decir que eran un trasborod) y luego he sustituido cada valor correspondiente en base a la tabla que he realizado antes de las distancias de los trasbrodos para el algoritmo A*.
+
 ## Tiempo en entrada a estaciones
 A estos datos y tiempo de trasbordo, también hay que añadirle otro dato, auque no tan considerable por su peso (en tiempo) en comparación por ejemplo de un trasborod largo o un trayecto en metro: el tiempo que tardan las personas en entrar en las estacion.
 Al igual que para las distancias de los trasborodos, no existe  registro oficial público que cronometre este intervalo para cada estación, y de nuevo he optado por hacer una estimación basada en la ingeniería civil de la red, es decir, asumo que este tiempo extra varia según la profundidad física de la estación y su complejidad de trasborods y arquitectura.

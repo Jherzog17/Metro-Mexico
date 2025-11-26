@@ -14,9 +14,8 @@ def cargar_transbordos(ruta_csv="Datos/Limpio/distancias_transbordos_original.cs
 def guardar_csv_para_aestrella( ruta_salida="Datos/Limpio/distancias_transbordos_para_aestrella.csv" ):
     """
     Usa cargar_transbordos() y guarda un nuevo CSV con las columnas:
-    - Distancia_fisica_m (metros reales)
-    - Coste_Aestrella (metros equivalentes para A*)
-    - más las columnas originales que ya tuviera el CSV
+    Coste_Aestrella (metros equivalentes para A*)
+    más las columnas originales que ya tuviera el CSV
     """
     df = cargar_transbordos()  # usa la ruta por defecto
     df.to_csv(ruta_salida, index=False)
@@ -26,3 +25,26 @@ def guardar_csv_para_aestrella( ruta_salida="Datos/Limpio/distancias_transbordos
 if __name__ == "__main__":
     guardar_csv_para_aestrella()
 
+# Rutas relativas desde la raíz del proyecto
+RUTA_INTRODUCIR_DATOS= "Datos/Limpio/distancias_reales_transbordos.csv"
+RUTA_DATOS_TRANSBORDOS = "Datos/Limpio/distancias_trasbordos_para_aestrella.csv"
+
+# Cargar el fichero grande (todas las aristas, con 0 en los transbordos)
+df_main = pd.read_csv(RUTA_INTRODUCIR_DATOS)
+
+# Cargar el fichero de transbordos con Coste_Aestrella
+df_costes = pd.read_csv(RUTA_DATOS_TRANSBORDOS)
+
+# Filtrar solo las filas de transbordo (es decir las que tienen distancia = 0)
+mask_transbordos = df_main["Distancia"] == 0
+df_transbordos = df_main[mask_transbordos].copy()
+
+# aqui aprovecho que el orden es el mismo
+# sustuir los 0 por los Coste_Aestrella 
+df_transbordos["Distancia"] = df_costes["Coste_Aestrella"].values
+
+# Volvemos a meter esas distancias en el dataframe original
+df_main.loc[mask_transbordos, "Distancia"] = df_transbordos["Distancia"]
+
+# Guardamos sobre el MISMO fichero
+df_main.to_csv(RUTA_INTRODUCIR_DATOS, index=False)
