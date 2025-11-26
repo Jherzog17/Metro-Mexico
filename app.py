@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Metro CDMX - Aplicación Principal
 Punto de entrada para ejecutar el navegador de rutas del Metro de la Ciudad de México.
