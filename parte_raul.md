@@ -32,7 +32,7 @@ Oceanía (L5–LB) ≈ 59 m
 El Rosario (L6–L7) ≈ 37 m  
 Bellas Artes (L2–L8) ≈ 72 m  
 
-Para las estimaciones, es decir el resto de datos, que no existen datos exactos porque como ya he comentado, para muchos transbordos el STC solo publica tiempos (por ejemplo “3 minutos”) pero no metros, entonces con esto tambén se puede hacer una estimacion de los metros, para ello he usado una velocidad de una persona típica (que aplicaré para la próxima transformacion para que el algorimo A* pueda interpretar estos datos) y he codigo unos 80 metros por minuto, para asi pasar de minutos a metros
+Para las estimaciones, es decir el resto de datos, que no existen datos exactos porque como ya he comentado, para muchos transbordos el STC solo publica tiempos (por ejemplo 3 minutos1) pero no metros, entonces con esto tambén se puede hacer una estimacion de los metros, para ello he usado una velocidad de una persona típica (que aplicaré para la próxima transformacion para que el algorimo A* pueda interpretar estos datos) y he codigo unos 80 metros por minuto, para asi pasar de minutos a metros
 Por otro lado también he determinado los rangos razonables dependiendo del trnasborod  porque algunas fuentes solo inidicar una estimacion aproximada (que ya es mejor que nada),  como: corto (que he considerado entre 100–250 m), medio (250–400 m) y largo (400–600 m)
 
 ### Clasificación de los valores del CSV
@@ -42,13 +42,13 @@ En el CSV final he distinguido claramente tres tipos de valores (lo indico en el
 **Exacto**  
 Son distancias que coinciden con valores publicados por el STC (vía ADN40, Sopitas, etc.).  
 
-3. **Estimado**  
+**Estimado**  
    Son transbordos de los que no existe dato público en metros, pero logicamente existen (porque salen en nuestros datos y en el mapa del metro).
    En estos casos he utilizado uno de estos criterios que ya he comentado (corto, medio o largo) o bien datos puntuales en los que solo indican el tiempo y hago una conversion aproximada
    Transbordos internos de Pantitlán sin dato oficial (L1–L5, L1–L9, L9–LA, L5–L9):  
    Aquí he usado valores altos (350–500 m) porque todas las fuentes coinciden en que Pantitlán es una de las estaciones más complejas y con pasillos largos, aunque no desglosen cada combinación de líneas.
 
-En el propio CSV, los casos modificados o añadidos están marcados como MOD o NUEVO en el comentario para dejar claro qué viene de fuentes externas y qué es diseño de este proyecto.
+En el propio CSV, los casos modificados o añadidos están marcados en el comentario para dejar claro qué viene de fuentes externas y que es aproximado etc
 
 ## Compatibilidad
 Antes de cerrar el fichero he hecho dos comprobaciones importantes 
@@ -61,7 +61,11 @@ aunque he intentado ser lo más riguroso posible, hay que dejar claro que logica
 
 ## transformacion de los datos
 Una vez he conseguido todos los datos sobre los trasbordos, hay que llevar a cabo una converison para que el algoritmo A* pueda interpretar los datos; he aqui el problema, que las distancias en el algoritmo A* se recorren siempre a una velocidad concreta, a la que se mueve el tren, es por ello que es necesario llevar a cabo dicha conversión. 
-
+“Para compatibilizar los trasbordos (a 4,8 km/h) con el resto de las aristas (a 35 km/h) sin modificar el código del A*, se ha aplicado un factor de conversión 
+vel del tren/ vel a pie = 35/4.8 ≈ 7,29
+Con este factor de conversion bastante sencillo, las distancias de trasbordo se ‘inflan’ en el grafo, y el A* puede seguir trabajando como si todas las aristas se recorrieran a la velocidad del tren, pero el tiempo efectivo de los trasbordos queda representado correctamente.
+Esto lo he hecho bascicamente primero realizando una funcion que se encargue del factor de converiosn, y posteriormente otras que recoja los dato sde las distancias reales de los trasbordos, los pase por la funcion de conversion y luego se devuelvan en un csv apto ya para procesar la información en el algoritmo A*  todo ello esta contenido en conversion_datos_trasbordos.py
+Por lo tanto los datos relamente que haran falta a Alba e Irene son los que estan en la utlima columna del csv de distancias_trasborods_para_aestrella, en la columna de Coste_Aestrella
 
 ## Tiempo en entrada a estaciones
 A estos datos y tiempo de trasbordo, también hay que añadirle otro dato, auque no tan considerable por su peso (en tiempo) en comparación por ejemplo de un trasborod largo o un trayecto en metro: el tiempo que tardan las personas en entrar en las estacion 
