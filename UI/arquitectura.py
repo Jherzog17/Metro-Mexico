@@ -362,26 +362,10 @@ class MainWindow(QtWidgets.QMainWindow):
         map_layout.setContentsMargins(0, 0, 0, 0)
         map_layout.setSpacing(0)
 
-        # Caja de tiempo estimado (inicialmente oculta)
-        self.time_box = QtWidgets.QLabel()
-        self.time_box.setAlignment(Qt.AlignCenter)
-        self.time_box.setWordWrap(True)
-        self.time_box.setStyleSheet("""
-            QLabel {
-                background-color: #B06821;
-                color: #511B18;
-                font-size: 18px;
-                padding: 14px 14px;
-                border-radius: 10px;
-                margin: 20px 150px;
-            }
-        """)
-        self.time_box.setVisible(False)  # Oculto por defecto
 
         self.map = MapView()
 
         # Añadir widgets al contenedor del mapa
-        map_layout.addWidget(self.time_box)
         map_layout.addWidget(self.map, 1)
 
         # Añadir al layout principal
@@ -463,7 +447,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_clear(self):
         self.steps_list.clear()
         self.lbl_resumen.setText("Esperando ruta...")
-        self.time_box.setVisible(False)  # Ocultar la caja de tiempo
         self.last_route_result = None # Limpiar el resultado de la ruta
         self.map.draw_network(self.stations_xy, self.edges)  # Redibuja limpio
 
@@ -474,7 +457,6 @@ class MainWindow(QtWidgets.QMainWindow):
         result = self._route_finder(origen, destino)
         if not result:
             self.lbl_resumen.setText("⚠ No hay ruta disponible.")
-            self.time_box.setVisible(False)
             self.last_route_result = None
             return
 
@@ -484,9 +466,6 @@ class MainWindow(QtWidgets.QMainWindow):
         ruta_cruda = result.get("ruta_cruda", []) # Obtener ruta con sufijos _L (ej: Observatorio_L1)
         tiempo = result["tiempo"]
 
-        # Mostrar la caja de tiempo estimado
-        self.time_box.setText(f"El tiempo estimado para llegar de {origen} a {destino} es de:\n{tiempo}")
-        self.time_box.setVisible(True)
 
         self.steps_list.clear()
 
