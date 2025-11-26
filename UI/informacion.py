@@ -5,18 +5,14 @@ from aestrella import G_mexico, convertir_distancia_a_tiempo
 
 class WidgetItemLineaTiempo(QtWidgets.QWidget):
     """
-    Widget visual para un nodo en la línea de tiempo vertical.
+    Widget para un nodo en la línea de tiempo vertical.
     Muestra:
       - Columna central: Línea vertical (arriba/abajo) y nodo central (círculo).
       - Columna derecha: Texto principal y secundario.
     """
-    def __init__(self, 
-                 color_nodo, 
-                 color_linea_superior=None, estilo_linea_superior=Qt.SolidLine,
-                 color_linea_inferior=None, estilo_linea_inferior=Qt.SolidLine,
-                 texto_principal="", texto_secundario=None, texto_linea_inferior=None,
-                 es_transbordo=False,
-                 parent=None):
+    def __init__(self, color_nodo, color_linea_superior=None, estilo_linea_superior=Qt.SolidLine, color_linea_inferior=None, 
+                 estilo_linea_inferior=Qt.SolidLine, texto_principal="", texto_secundario=None, texto_linea_inferior=None, 
+                 es_transbordo=False, parent=None):
         super().__init__(parent)
         self.color_nodo = color_nodo
         self.color_linea_superior = color_linea_superior
@@ -28,7 +24,7 @@ class WidgetItemLineaTiempo(QtWidgets.QWidget):
         self.texto_linea_inferior = texto_linea_inferior
         self.es_transbordo = es_transbordo
         
-        # Altura fija suficiente para mostrar texto y conectar líneas
+        # Altura fija para mostrar texto y conectar líneas
         self.setMinimumHeight(80)
         
     def paintEvent(self, event):
@@ -46,9 +42,8 @@ class WidgetItemLineaTiempo(QtWidgets.QWidget):
         
         centro_y = self.height() / 2
         
-        # --- DIBUJAR LÍNEAS VERTICALES ---
-        
-        # Línea Superior (desde arriba hasta el centro)
+        # LÍNEAS VERTICALES
+        # Línea desde arriba hasta el centro
         if self.color_linea_superior:
             pluma = QtGui.QPen(QtGui.QColor(self.color_linea_superior))
             pluma.setWidth(ancho_linea)
@@ -56,7 +51,7 @@ class WidgetItemLineaTiempo(QtWidgets.QWidget):
             painter.setPen(pluma)
             painter.drawLine(centro_x, 0, centro_x, centro_y)
             
-        # Línea Inferior (desde el centro hasta abajo)
+        # Línea desde el centro hasta abajo
         if self.color_linea_inferior:
             pluma = QtGui.QPen(QtGui.QColor(self.color_linea_inferior))
             pluma.setWidth(ancho_linea)
@@ -64,18 +59,16 @@ class WidgetItemLineaTiempo(QtWidgets.QWidget):
             painter.setPen(pluma)
             painter.drawLine(centro_x, centro_y, centro_x, self.height())
             
-        # --- DIBUJAR NODO CENTRAL ---
-        # Círculo con borde blanco para separar de la línea
+        # DIBUJAR NODO (estacion)
         painter.setPen(QtGui.QPen(Qt.white, 3))
         painter.setBrush(QtGui.QColor(self.color_nodo))
         painter.drawEllipse(QtCore.QPointF(centro_x, centro_y), radio_nodo, radio_nodo)
         
-        # --- DIBUJAR TEXTO PRINCIPAL Y SECUNDARIO ---
-        # El texto va a la derecha de la línea central
+        #  TEXTO
         x_texto = centro_x + 25
         rect_texto = QtCore.QRect(x_texto, 0, ancho_widget - x_texto - 10, self.height())
         
-        # Fuente Principal
+        # texto Principal
         fuente_principal = QtGui.QFont("Segoe UI", 12, QtGui.QFont.Bold)
         painter.setFont(fuente_principal)
         painter.setPen(QtGui.QColor("#b06821"))
@@ -83,7 +76,7 @@ class WidgetItemLineaTiempo(QtWidgets.QWidget):
         fm_principal = QtGui.QFontMetrics(fuente_principal)
         alto_principal = fm_principal.height()
         
-        # Calcular posición Y para texto principal/secundario (centrado en el nodo)
+        # Calcular posición Y para texto (centrado en el nodo)
         if self.texto_secundario:
             fuente_secundaria = QtGui.QFont("Segoe UI", 10)
             fm_secundaria = QtGui.QFontMetrics(fuente_secundaria)
@@ -98,20 +91,17 @@ class WidgetItemLineaTiempo(QtWidgets.QWidget):
             painter.setPen(QtGui.QColor("#666666"))
             painter.drawText(x_texto, y_inicio + alto_secundaria + 2, self.texto_secundario)
         else:
-            # Solo texto principal
             y_inicio = centro_y + (fm_principal.ascent() / 2) - 2
             painter.drawText(x_texto, y_inicio, self.texto_principal)
 
-        # --- DIBUJAR TEXTO DE LÍNEA INFERIOR (TRANSBORDO) ---
+        #  TEXTO DE TRANSBORDO
         if self.texto_linea_inferior:
-            # Este texto se dibuja centrado verticalmente en la mitad inferior del widget
-            # y a la derecha de la línea
             y_centro_inferior = centro_y + (self.height() - centro_y) / 2
             
             fuente_inferior = QtGui.QFont("Segoe UI", 10)
             fuente_inferior.setItalic(True)
             painter.setFont(fuente_inferior)
-            painter.setPen(QtGui.QColor("#666666")) # Gris oscuro
+            painter.setPen(QtGui.QColor("#666666"))
             
             fm_inferior = QtGui.QFontMetrics(fuente_inferior)
             y_texto_inf = y_centro_inferior + (fm_inferior.ascent() / 2)
@@ -123,20 +113,21 @@ class InfoPanel(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         # Estilo del panel lateral
+        # nota: pq está esto comentaod? tuni?
         #   self.setStyleSheet("background-color: white; border-left: 1px solid #ccc;")
         self.setFixedWidth(400) # Ancho fijo para el panel lateral
         self.layout_principal = QtWidgets.QVBoxLayout(self)
         self.layout_principal.setSpacing(10)
         self.layout_principal.setContentsMargins(20, 20, 20, 20)
         
-        # Header
+        # Tiempo total
         self.lbl_total = QtWidgets.QLabel()
-        self.lbl_total.setStyleSheet("font-size: 20px; font-weight: 900; color: #b06821; margin-bottom: 10px;")
+        self.lbl_total.setStyleSheet("font-size: 20px; font-weight: 700; color: #b06821; margin-bottom: 10px;")
         self.lbl_total.setAlignment(Qt.AlignCenter)
         self.lbl_total.setWordWrap(True)
         self.layout_principal.addWidget(self.lbl_total)
         
-        # Scroll Area
+        # Ruta dibujada en linea
         self.scroll = QtWidgets.QScrollArea()
         self.scroll.setWidgetResizable(True)
         self.scroll.setFrameShape(QtWidgets.QFrame.NoFrame)

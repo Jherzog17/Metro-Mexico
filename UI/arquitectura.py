@@ -206,15 +206,13 @@ class MainWindow(QtWidgets.QMainWindow):
         # Hooks
         self._data_loader = None
         self._route_finder = None
-
+        self.last_route_result = None
+        
         # Data
         self.stations_list = []
         self.stations_xy = {}
         self.edges = []
-        self.tiempos_entrada = {} # Nuevo: Tiempos de entrada a estaciones
-
-        # Estado
-        self.last_route_result = None # Para guardar el resultado de la última ruta calculada
+        self.tiempos_entrada = {}
 
         self._build_ui()
         self._connect_signals()
@@ -231,42 +229,36 @@ class MainWindow(QtWidgets.QMainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
-        # --- PANEL IZQUIERDO (CONTROLES) ---
+        # PANEL IZQUIERDO (controles)
         # Contenedor para darle color de fondo específico
         left_container = QtWidgets.QWidget()
         left_container.setObjectName("SidePanel")  # ID para CSS
-        #left_container.setStyleSheet("background-color: #511B18;")
-        left_container.setFixedWidth(350)  # Ancho fijo elegante
+        left_container.setFixedWidth(350)  # Ancho fijo
 
         left_layout = QtWidgets.QVBoxLayout(left_container)
-        left_layout.setContentsMargins(20, 30, 20, 30)  # Margen interno
-        left_layout.setSpacing(15)
+        left_layout.setContentsMargins(20, 30, 20, 30)  # Margen para widgets
+        left_layout.setSpacing(15) # espaciado entre widgets
 
-        # --- NUEVO BLOQUE PARA EL LOGO (IMAGEN) ---
+        # LOGO (IMAGEN)
         # 1. Crear la etiqueta que contendrá la imagen
         lbl_logo = QtWidgets.QLabel()
 
-        # 2. Cargar el archivo de imagen desde la ruta absoluta
+        # 2. Cargar el archivo de imagen
         logo_path = directorio_root / "UI" / "assets" / "metro.png"
         pixmap_logo = QtGui.QPixmap(str(logo_path))
 
-        # 3. Verificar si la imagen cargó correctamente
-            # 4. Escalar la imagen.
-            # "scaledToHeight(100)" hace que tenga 100px de alto y el ancho se ajuste automático.
-            # Ajusta ese '100' si la quieres más grande o más pequeña.
-        scaled_pixmap = pixmap_logo.scaledToHeight(100, Qt.SmoothTransformation)
+        # 4. Escalar la imagen.
+        scaled_pixmap = pixmap_logo.scaledToHeight(100, Qt.SmoothTransformation) # el ancho se ajusta automaticamente
         lbl_logo.setPixmap(scaled_pixmap)
 
-            # 5. (Opcional) Centrar la imagen en el panel lateral
+        # 5. Centramos la imagen en el panel izq.
         lbl_logo.setAlignment(Qt.AlignCenter)
 
-            # 6. Añadir la imagen al layout vertical PRIMERO
+         # 6. Añadimos la imagen al layout vertical
         left_layout.addWidget(lbl_logo)
 
 
-
-
-        # Título
+        # TITULO y SUBTITULO
         title = QtWidgets.QLabel("METRO CDMX")
         title.setStyleSheet("font-size: 24px; font-weight: 900; color: #B06821; letter-spacing: 2px;")
         left_layout.addWidget(title)
@@ -277,7 +269,7 @@ class MainWindow(QtWidgets.QMainWindow):
         left_layout.addWidget(subtitle)
         subtitle.setAlignment(Qt.AlignCenter)
 
-        # Inputs
+        # BUSCADORES DE ORIGEN Y DESTINO
         self.cmb_origen = QtWidgets.QComboBox()
         self.cmb_origen.setPlaceholderText("Selecciona Origen...")
         self.cmb_destino = QtWidgets.QComboBox()
@@ -285,11 +277,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.cmb_origen.setEditable(True)
         self.cmb_destino.setEditable(True)
 
-        # Configurar el icono de la flecha dorada para los ComboBox
+        # icono de la flecha dorada para el dropdown
         flecha_path = directorio_root / "UI" / "assets" / "flecha_dorada.png"
         if flecha_path.exists():
             icon_flecha = QtGui.QIcon(str(flecha_path))
-            # Aplicar el estilo CSS con la imagen de la flecha
             combo_style = f"""
                 QComboBox::down-arrow {{
                     image: url({str(flecha_path)});
@@ -310,18 +301,18 @@ class MainWindow(QtWidgets.QMainWindow):
         left_layout.addWidget(lbl_dest)
         left_layout.addWidget(self.cmb_destino)
 
-        # Botones Acción
+        # BOTON CALCULAR RUTA
         self.btn_calcular = QtWidgets.QPushButton("CALCULAR RUTA")
         self.btn_calcular.setCursor(Qt.PointingHandCursor)
         left_layout.addWidget(self.btn_calcular)
 
-        # Separador
+        # LINEA HORIZONTAL PARA SEPARAR 
         line = QtWidgets.QFrame()
         line.setFrameShape(QtWidgets.QFrame.HLine)
         line.setStyleSheet("color: #305853;")
         left_layout.addWidget(line)
 
-        # Resultados
+        # RESULTADOS
         self.lbl_resumen = QtWidgets.QLabel("Esperando ruta...")
         self.lbl_resumen.setStyleSheet("font-size: 14px; font-style: italic; color: #305853;")
         self.lbl_resumen.setWordWrap(True)
@@ -330,15 +321,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.steps_list = QtWidgets.QListWidget()
         left_layout.addWidget(self.steps_list)
 
-        # Botones secundarios
+        # BOTONES LIMPIAR / INFO.
         btn_row = QtWidgets.QHBoxLayout()
         self.btn_info = QtWidgets.QPushButton("Borrar campos")
         self.btn_info.setCursor(Qt.PointingHandCursor)
         self.btn_info.setStyleSheet("background-color: #305853; color: white;")
         self.btn_limpiar = QtWidgets.QPushButton("      Limpiar      ")
-        self.btn_limpiar.setObjectName("btn_limpiar")  # ID para CSS rojo
+        self.btn_limpiar.setObjectName("btn_limpiar")  # ID para CSS
         self.btn_limpiar.setCursor(Qt.PointingHandCursor)
 
+        # LOGO SOMBRERO
         sombrero = QtWidgets.QLabel()
         sombrero_path = directorio_root / "UI" / "assets" / "sombrero.png"
         logo_sombrero = QtGui.QPixmap(str(sombrero_path))
@@ -347,80 +339,55 @@ class MainWindow(QtWidgets.QMainWindow):
         sombrero.setAlignment(Qt.AlignCenter)
 
 
-
-
         btn_row.addWidget(self.btn_info)
         btn_row.addWidget(sombrero)
         btn_row.addWidget(self.btn_limpiar)
         left_layout.addLayout(btn_row)
 
-        # --- FIN PANEL IZQUIERDO ---
-        # --- PANEL DERECHO (MAPA) ---
-        # Crear un contenedor para el mapa con overlay
+        # PANEL DERECHO (MAPA)
+        # Crear un contenedor para el mapa
         map_container = QtWidgets.QWidget()
         map_layout = QtWidgets.QVBoxLayout(map_container)
-        map_layout.setContentsMargins(0, 0, 0, 0)
-        map_layout.setSpacing(0)
-
-        # Caja de tiempo estimado (inicialmente oculta)
-        self.time_box = QtWidgets.QLabel()
-        self.time_box.setAlignment(Qt.AlignCenter)
-        self.time_box.setWordWrap(True)
-        self.time_box.setStyleSheet("""
-            QLabel {
-                background-color: #511b18;
-                color: #1b2a30;
-                font-size: 18px;
-                padding: 14px 14px;
-                border-radius: 10px;
-                margin: 20px 150px;
-            }
-        """)
-        self.time_box.setVisible(False)  # Oculto por defecto
+        # nota: confirmar con zoom que esto se pueda quitar
+        # map_layout.setContentsMargins(0, 0, 0, 0)
+        # map_layout.setSpacing(0)
 
         self.map = MapView()
-
-        # Añadir widgets al contenedor del mapa
-        map_layout.addWidget(self.time_box)
         map_layout.addWidget(self.map, 1)
 
         # Añadir al layout principal
         main_layout.addWidget(left_container)
-        main_layout.addWidget(map_container, 1)  # 1 = estirar mapa todo lo posible
+        main_layout.addWidget(map_container)
 
-        # Panel de información (derecha, oculto inicialmente)
+        # Panel de información derecho, oculto inicialmente
         self.info_panel = InfoPanel(self)
         self.info_panel.setObjectName("InfoPanel")
         self.info_panel.setAttribute(Qt.WA_StyledBackground, True)
         self.info_panel.hide()
         main_layout.addWidget(self.info_panel)
 
-        # Barra de estado minimalista con texto centrado
+        # status bar con precio
         self.status = QtWidgets.QStatusBar()
-        self.status_label = QtWidgets.QLabel("Cada billete de metro cuesta $5 pesos")
+        self.status_label = QtWidgets.QLabel("Cada billete de metro cuesta $5 pesos mexicanos")
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setStyleSheet("color: #AAAAAA;")
-        self.status.addWidget(self.status_label, 1)  # El 1 hace que ocupe todo el espacio
+        self.status.addWidget(self.status_label, 1)
         self.setStatusBar(self.status)
 
     def _connect_signals(self):
         self.btn_calcular.clicked.connect(self.on_calculate)
         self.btn_limpiar.clicked.connect(self.on_clear)
-        self.btn_info.clicked.connect(self.on_clear_fields)
+        # self.btn_info.clicked.connect(self.on_clear)
         self.route_requested.connect(self._handle_route_requested)
 
-    # ---------- Integración (IGUAL QUE ANTES) ----------
     def set_data_loader(self, loader: Callable):
         self._data_loader = loader
 
     def set_route_finder(self, finder: Callable):
         self._route_finder = finder
 
-    # ---------- Slots ----------
     @QtCore.Slot()
     def on_load_data(self):
-        if not self._data_loader:
-            return
         try:
             stations, stations_xy, edges, _, _, _, _, tiempos_entrada = self._data_loader()
             self.stations_list = stations
@@ -439,8 +406,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def crear_icono_circulo(self, color_hex: str, tamano: int = 16) -> QtGui.QIcon:
         """
-        Crea un icono circular del color especificado.
-        Se usa para mostrar el color de la línea en la lista de pasos.
+        Crea un icono circular de color_hex. Se usa para mostrar el color de la línea en la lista de pasos.
         """
         pixmap = QtGui.QPixmap(tamano, tamano)
         pixmap.fill(Qt.transparent)
@@ -460,8 +426,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_calculate(self):
         origen = self.cmb_origen.currentText().strip()
         destino = self.cmb_destino.currentText().strip()
-        if not origen or not destino:
-            return
         self.route_requested.emit(origen, destino)
 
     @QtCore.Slot()
@@ -470,6 +434,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lbl_resumen.setText("Esperando ruta...")
         self.last_route_result = None # Limpiar el resultado de la ruta
         self.map.draw_network(self.stations_xy, self.edges)  # Redibuja limpio
+        self.cmb_origen.setCurrentIndex(-1) # borra caja de origen
+        self.cmb_destino.setCurrentIndex(-1) # borra caja de destino
+        self.info_panel.hide() # oculta ruta calculada
+
 
     @QtCore.Slot(str, str)
     def _handle_route_requested(self, origen: str, destino: str):
@@ -478,7 +446,7 @@ class MainWindow(QtWidgets.QMainWindow):
         result = self._route_finder(origen, destino)
         if not result:
             self.lbl_resumen.setText("⚠ No hay ruta disponible.")
-            self.last_route_result = None
+            self.last_route_result = None # nota: igual esta linea se podria quitar
             return
 
         # result es ahora un diccionario con 'ruta', 'distancia', y 'tiempo'
@@ -487,7 +455,6 @@ class MainWindow(QtWidgets.QMainWindow):
         ruta_cruda = result.get("ruta_cruda", []) # Obtener ruta con sufijos _L (ej: Observatorio_L1)
         tiempo = result["tiempo"]
 
-
         self.steps_list.clear()
 
         # Si no tenemos ruta_cruda (por compatibilidad), usamos ruta normal pero sin colores específicos
@@ -495,6 +462,8 @@ class MainWindow(QtWidgets.QMainWindow):
             ruta_cruda = ruta
 
         contador_visual = 1
+        num_transbordos=0
+        
         for i, nombre_estacion in enumerate(ruta):
             # Si es la misma estación que la anterior, la saltamos visualmente (ya se mostró como transbordo)
             if i > 0 and ruta[i] == ruta[i-1]:
@@ -506,38 +475,27 @@ class MainWindow(QtWidgets.QMainWindow):
             # Obtener nodo crudo actual (con información de línea)
             nodo_crudo = ruta_cruda[i]
 
-            # Lógica para detectar transbordo:
-            # Si la estación actual tiene el mismo nombre simple que la anterior o la siguiente, es un transbordo
+            # transbordo
+            # Si la estación actual tiene el mismo nombre que la anterior o la siguiente, es un transbordo
             es_transbordo = False
 
-            # Chequear estación anterior
-            if i > 0:
-                nombre_previo = ruta[i-1]
-                if nombre_previo == nombre_estacion:
-                    es_transbordo = True
-
-            # Chequear estación siguiente
-            if i < len(ruta) - 1:
-                nombre_siguiente = ruta[i+1]
-                if nombre_siguiente == nombre_estacion:
-                    es_transbordo = True
+            # comprobamos estación anterior y siguiente
+            if (i>0 and ruta[i-1] == nombre_estacion) or (i < len(ruta) - 1 and ruta[i+1] == nombre_estacion):
+                es_transbordo = True
+                num_transbordos += 1
 
             if es_transbordo:
-                # Si es transbordo, usamos el color naranja
+                # Si es transbordo, usamos el color definido en config
                 color_hex = colores_lineas["Transfer"]
             else:
-                # Extraer línea del nodo_crudo (ej: Observatorio_L1 -> L1)
+                # sacar línea del nodo_crudo (Observatorio_L1 -> L1)
                 if "_L" in nodo_crudo:
                     partes = nodo_crudo.split("_L")
-                    if len(partes) > 1:
-                        codigo_linea = "L" + partes[1]
-                        # Obtener el color correspondiente a la línea
-                        color_hex = colores_lineas.get(codigo_linea, colores_lineas["Default"])
+                    codigo_linea = "L" + partes[1]
+                    color_hex = colores_lineas.get(codigo_linea, colores_lineas["Default"]) 
 
-            # Crear icono con el color determinado
+            # Creamos la lista
             icono = self.crear_icono_circulo(color_hex)
-
-            # Crear item de la lista
             texto_item = f"{contador_visual}. {nombre_estacion}"
             if es_transbordo:
                 texto_item += " (Transbordo)"
@@ -548,8 +506,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
             contador_visual += 1
 
-        # Calcular número de estaciones (restamos 1 porque n estaciones son n-1 tramos)
-        num_estaciones = len(ruta) - 1
+
+        # Calcular número de estaciones (restamos nº de transbordos pq es la misma estacion)
+        num_estaciones = len(ruta) - num_transbordos
         self.lbl_resumen.setText(f"✔ Ruta calculada: {num_estaciones} estaciones")
         self.map.draw_network(self.stations_xy, self.edges)
         self.map.draw_route(self.stations_xy, ruta)
@@ -570,15 +529,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.info_panel.update_info(origen, destino, self.last_route_result, tiempo_entrada_str, tiempo_salida_str)
         self.info_panel.show()
 
-    @QtCore.Slot()
-    def on_clear_fields(self):
-        """Limpia los campos de origen y destino."""
-        self.cmb_origen.setCurrentIndex(-1)
-        self.cmb_destino.setCurrentIndex(-1)
-
-
-# --------- VARIABLES GLOBALES PARA DATOS DEL METRO ---------
-# Se cargarán al iniciar la aplicación
+# VARIABLES GLOBALES (para datos del metro, se cargarán al iniciar la aplicación)
 stations_list = []
 stations_xy = {}
 edges_list = []
@@ -607,22 +558,16 @@ def find_metro_route(origen, destino):
 def main():
     app = QtWidgets.QApplication(sys.argv)
 
-    # Configuración de fuente
-    font = QtGui.QFont("Segoe UI", 10)
+    font = QtGui.QFont("Segoe UI", 10) # definimos fuente y tamaño
     app.setFont(font)
 
     win = MainWindow()
 
-    # --- CONFIGURACIÓN DEL SISTEMA ---
-    # Usar funciones simples para cargar datos y calcular rutas
-    win.set_data_loader(load_metro_data)
+    #cargamos datos
+    win.set_data_loader(load_metro_data) 
     win.set_route_finder(find_metro_route)
-    # --------------------------
+    win.on_load_data()
 
     win.show()
-
-    # Esto hace que cargue los datos nada más abrirse
-    # (Asegúrate de tener los 3 CSVs en la misma carpeta)
-    win.on_load_data()
 
     sys.exit(app.exec())
