@@ -14,8 +14,8 @@ from aestrella import trayecto_optimo_distancia
 directorio_root = Path(__file__).parent.parent.resolve()
 
 
-#  FUNCIÓN PARA CARGAR ESTILOS CSS jorge
 
+#  jorge: FUNCIÓN PARA CARGAR ESTILOS CSS 
 
 def cargar_estilos():
     """Carga los estilos CSS desde el archivo externo estilos.css"""
@@ -32,21 +32,21 @@ StationId = str
 Point = Tuple[float, float]
 Edge = Tuple[StationId, StationId]
 
-# Colores de las líneas (según petición del usuario)
+# Colores de las líneas segun metro original de mexico
 colores_lineas = {
-    "L1": "#D7439D",       # Rosa
+    "L1": "#D7439F",       # Rosa
     "L2": "#005eb8",       # Azul
-    "L3": "#FFC600",       # Amarillo
+    "L3": "#FFC600",       # Amarillo 'oscuro'
     "L4": "#97D700",       # Verde
     "L5": "#FFE900",       # Amarillo
     "L6": "#DA291C",       # Rojo
     "L7": "#FF8200",       # Naranja
-    "L8": "#009A44",       # Verde
+    "L8": "#009A44",       # Verde oscuro
     "L9": "#4A2E1F",       # Marron
     "LA": "#9B26B6",       # Morado
     "LB": "#A7A8AA",       # Gris
     "L12": "#C6AA76",      # Beige
-    "Transfer": "#305853", # Naranja
+    "Transfer": "#481716", # mismo que el fondo
     "Default": "#AAAAAA"
 }
 
@@ -110,10 +110,7 @@ class MapView(QtWidgets.QGraphicsView):
         # que se pueda 'arrastrar' el mapa
         self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         # que el zoom no sea al centro sino a donde esta el raton
-        self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
-        # que al redimensionar la ventana, lo que está debajo del raton siga ahi
-        # nota: podemos probar a ver como se ve quitando esto pq no entiendo muy biwn quw hace
-        self.setResizeAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
+        self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)        
 
         # Quitamos los bordes blancos, que no haya margen
         self.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -127,19 +124,14 @@ class MapView(QtWidgets.QGraphicsView):
         else:
             self.scale(zoom_out_factor, zoom_out_factor)
 
-    def draw_network(
-            self,
-            stations_xy: Dict[StationId, Point],
-            edges: List[Edge],
-            station_radius: float = 18.0,  # Estaciones un poco más grandes
-    ) -> None:
+    # funcion para dibujar los nodos (estaciones) y aristas (caminos)
+    def draw_network(self, stations_xy: Dict[StationId, Point], edges: List[Edge], station_radius: float = 18.0) -> None:
         scene = self.scene()
         scene.clear()
 
         # 1. Dibujar aristas
         pen_edge = QPen(QColor("#B06821"))
-        pen_edge.setWidthF(10.0)  # Líneas más gruesas
-        pen_edge.setCapStyle(Qt.RoundCap)  # Bordes de línea redondeados
+        pen_edge.setWidthF(10.0)  # que sean más gruesas para qe se vean bien sin zoom
 
         for a, b in edges:
             if a in stations_xy and b in stations_xy:
@@ -153,7 +145,7 @@ class MapView(QtWidgets.QGraphicsView):
         pen_station.setWidthF(10.0)
 
         for stationid, (x, y) in stations_xy.items():
-            # En lugar de dibujar un circulito, instanciamos clase la clase Stationitem pa que aparezca el nombre
+            # En lugar de dibujar un circulito, instanciamos la clase Stationitem pa que aparezca el nombre
             station_item = StationItem(x, y, station_radius, stationid, pen_station, brush_station)
             scene.addItem(station_item)
 
@@ -171,7 +163,7 @@ class MapView(QtWidgets.QGraphicsView):
         # una línea gruesa debajo mas fuerte para que destaque mas
         pen_glow = QPen(route_color)
         pen_glow.setWidthF(12.0)
-        pen_glow.setColor(QColor(3, 218, 198, 60))  # Mismo color, transparencia alta
+        pen_glow.setColor(QColor(3, 218, 198, 60))  # Mismo azul, transparencia alta
         pen_glow.setCapStyle(Qt.RoundCap)
 
         pen_route = QPen(route_color)
@@ -212,7 +204,7 @@ class MapView(QtWidgets.QGraphicsView):
 class MainWindow(QtWidgets.QMainWindow):
     route_requested = QtCore.Signal(str, str)
 
-    # definimos titulo y tamaño grande por defecto
+    # definimos titulo, y tamaño grande por defecto
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Metro CDMX")
@@ -240,53 +232,49 @@ class MainWindow(QtWidgets.QMainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
-        # --- PANEL IZQUIERDO (CONTROLES) ---
-        # Contenedor para darle color de fondo específico
+
+        # PANEL IZQUIERDO (CONTROLES)
+        # creamos un widget para darle color de fondo específico
         left_container = QtWidgets.QWidget()
-        left_container.setObjectName("SidePanel")  # ID para CSS
-        #left_container.setStyleSheet("background-color: #511B18;")
-        left_container.setFixedWidth(350)  # Ancho fijo elegante
+        left_container.setObjectName("SidePanel")  # asi se define en el CSS
+        left_container.setFixedWidth(350)  # definimos el ancho
 
+        # añadimos un layout vertical para poder añadir widgets sobre él
         left_layout = QtWidgets.QVBoxLayout(left_container)
-        left_layout.setContentsMargins(20, 30, 20, 30)  # Margen interno
-        left_layout.setSpacing(15)
+        left_layout.setContentsMargins(20, 30, 20, 30)  # margen para los widgets
+        left_layout.setSpacing(15) # espaciado entre widgets
 
-        # --- NUEVO BLOQUE PARA EL LOGO (IMAGEN) ---
-        # 1. Crear la etiqueta que contendrá la imagen
+        # LOGO METRO 
+        # 1. etiqueta que contendrá la imagen
         lbl_logo = QtWidgets.QLabel()
 
-        # 2. Cargar el archivo de imagen desde la ruta absoluta
+        # 2. Cargamos el archivo de imagen
         logo_path = directorio_root / "UI" / "assets" / "metro.png"
         pixmap_logo = QtGui.QPixmap(str(logo_path))
 
-        # 3. Verificar si la imagen cargó correctamente
-            # 4. Escalar la imagen.
-            # "scaledToHeight(100)" hace que tenga 100px de alto y el ancho se ajuste automático.
-            # Ajusta ese '100' si la quieres más grande o más pequeña.
-        scaled_pixmap = pixmap_logo.scaledToHeight(100, Qt.SmoothTransformation)
+        # 4. Escalar la imagen.
+        scaled_pixmap = pixmap_logo.scaledToHeight(100, Qt.SmoothTransformation) # el ancho se ajusta automático segun el alto (100)
         lbl_logo.setPixmap(scaled_pixmap)
 
-            # 5. (Opcional) Centrar la imagen en el panel lateral
+        # 5. Centramos la imagen
         lbl_logo.setAlignment(Qt.AlignCenter)
 
-            # 6. Añadir la imagen al layout vertical PRIMERO
+        # 6. Añadimos la imagen al layout vertical
         left_layout.addWidget(lbl_logo)
 
-
-
-
-        # Título
+        # TÍTULO y SUBTÍTULO
         title = QtWidgets.QLabel("METRO CDMX")
         title.setStyleSheet("font-size: 24px; font-weight: 900; color: #B06821; letter-spacing: 2px;")
-        left_layout.addWidget(title)
         title.setAlignment(Qt.AlignCenter)
+        left_layout.addWidget(title)
+
 
         subtitle = QtWidgets.QLabel("Planificador de Ruta 🇲🇽")
-        subtitle.setStyleSheet("color: #305853; font-size: 14px; margin-bottom: 11px;")
-        left_layout.addWidget(subtitle)
+        subtitle.setStyleSheet("color: #305853; font-size: 14px;")
         subtitle.setAlignment(Qt.AlignCenter)
+        left_layout.addWidget(subtitle)
 
-        # Inputs
+        # CAJAS ORIGEN Y DESTINO
         self.cmb_origen = QtWidgets.QComboBox()
         self.cmb_origen.setPlaceholderText("Selecciona Origen...")
         self.cmb_destino = QtWidgets.QComboBox()
@@ -296,18 +284,17 @@ class MainWindow(QtWidgets.QMainWindow):
         
         # Configurar el icono de la flecha dorada para los ComboBox
         flecha_path = directorio_root / "UI" / "assets" / "flecha_dorada.png"
-        if flecha_path.exists():
-            icon_flecha = QtGui.QIcon(str(flecha_path))
-            # Aplicar el estilo CSS con la imagen de la flecha
-            combo_style = f"""
-                QComboBox::down-arrow {{
-                    image: url({str(flecha_path)});
-                    width: 12px;
-                    height: 12px;
-                }}
-            """
-            self.cmb_origen.setStyleSheet(self.cmb_origen.styleSheet() + combo_style)
-            self.cmb_destino.setStyleSheet(self.cmb_destino.styleSheet() + combo_style)
+        icon_flecha = QtGui.QIcon(str(flecha_path))
+        # Aplicar el estilo CSS con la imagen de la flecha
+        combo_style = f"""
+            QComboBox::down-arrow {{
+                image: url({str(flecha_path)});
+                width: 12px;
+                height: 12px;
+            }}
+        """
+        self.cmb_origen.setStyleSheet(self.cmb_origen.styleSheet() + combo_style)
+        self.cmb_destino.setStyleSheet(self.cmb_destino.styleSheet() + combo_style)
 
         lbl_orig = QtWidgets.QLabel("ORIGEN")
         lbl_orig.setStyleSheet("font-size: 12px; font-weight: bold; color: #305853;")
@@ -535,7 +522,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         color_hex = colores_lineas.get(codigo_linea, colores_lineas["Default"])
             
             # Crear icono con el color determinado
-            icono = self.crear_icono_circulo(color_hex)
+            # icono = self.crear_icono_circulo(color_hex)
             
             # Crear item de la lista
             texto_item = f"{contador_visual}. {nombre_estacion}"
@@ -543,7 +530,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 texto_item += " (Transbordo)"
             
             elemento = QtWidgets.QListWidgetItem(texto_item)
-            elemento.setIcon(icono)
+            # elemento.setIcon(icono)
             self.steps_list.addItem(elemento)
             
             contador_visual += 1
