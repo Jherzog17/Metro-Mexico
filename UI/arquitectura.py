@@ -631,6 +631,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_calcular.clicked.connect(self.on_calculate)
         self.btn_limpiar.clicked.connect(self.on_clear)
         self.route_requested.connect(self._handle_route_requested)
+        self.btn_info.clicked.connect(self.on_toggle_info)
+
+    @QtCore.Slot()
+    def on_toggle_info(self):
+        if self.info_panel.isVisible():
+            self.info_panel.hide()
+        else:
+            self.info_panel.show()
 
     def set_data_loader(self, loader: Callable):
         self._data_loader = loader
