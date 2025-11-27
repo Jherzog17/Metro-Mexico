@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Metro CDMX - Aplicación Principal
 Punto de entrada para ejecutar el navegador de rutas del Metro de la Ciudad de México.
@@ -12,7 +11,7 @@ ui_path = Path(__file__).parent / "UI"
 sys.path.insert(0, str(ui_path))
 
 # Importar y ejecutar la aplicación
-from UI.arquitectura import main
+from  UI.arquitectura import main
 
 if __name__ == "__main__":
     main()

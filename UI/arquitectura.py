@@ -8,7 +8,8 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import QPointF, Qt
 from PySide6.QtGui import QPolygonF, QBrush, QColor, QPen, QPainter
 from metro_data import cargar_datos, calcular_ruta
-from aestrella import trayecto_optimo_distancia
+from aestrella import trayecto_optimo_distancia, convertir_distancia_a_tiempo, G_mexico
+from informacion import InfoPanel
 
 # Obtener el directorio raíz del proyecto
 directorio_root = Path(__file__).parent.parent.resolve()
@@ -32,23 +33,7 @@ StationId = str
 Point = Tuple[float, float]
 Edge = Tuple[StationId, StationId]
 
-# Colores de las líneas segun metro original de mexico
-colores_lineas = {
-    "L1": "#D7439F",       # Rosa
-    "L2": "#005eb8",       # Azul
-    "L3": "#FFC600",       # Amarillo 'oscuro'
-    "L4": "#97D700",       # Verde
-    "L5": "#FFE900",       # Amarillo
-    "L6": "#DA291C",       # Rojo
-    "L7": "#FF8200",       # Naranja
-    "L8": "#009A44",       # Verde oscuro
-    "L9": "#4A2E1F",       # Marron
-    "LA": "#9B26B6",       # Morado
-    "LB": "#A7A8AA",       # Gris
-    "L12": "#C6AA76",      # Beige
-    "Transfer": "#481716", # mismo que el fondo
-    "Default": "#AAAAAA"
-}
+from config import colores_lineas
 
 
 class StationItem(QtWidgets.QGraphicsEllipseItem):
@@ -213,9 +198,15 @@ class MainWindow(QtWidgets.QMainWindow):
         # Hooks
         self._data_loader = None
         self._route_finder = None
+
+        # Data
         self.stations_list = []
         self.stations_xy = {}
         self.edges = []
+        self.tiempos_entrada = {} # Nuevo: Tiempos de entrada a estaciones
+
+        # Estado
+        self.last_route_result = None # Para guardar el resultado de la última ruta calculada
 
         self._build_ui()
         self._connect_signals()
@@ -281,7 +272,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.cmb_destino.setPlaceholderText("Selecciona Destino...")
         self.cmb_origen.setEditable(True)
         self.cmb_destino.setEditable(True)
-        
+
         # Configurar el icono de la flecha dorada para los ComboBox
         flecha_path = directorio_root / "UI" / "assets" / "flecha_dorada.png"
         icon_flecha = QtGui.QIcon(str(flecha_path))
@@ -328,9 +319,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Botones secundarios
         btn_row = QtWidgets.QHBoxLayout()
-        self.btn_cargar = QtWidgets.QPushButton("Recargar Datos")
-        self.btn_cargar.setCursor(Qt.PointingHandCursor)
-        self.btn_cargar.setStyleSheet("background-color: #305853; color: white;")
+        self.btn_info = QtWidgets.QPushButton("Borrar campos")
+        self.btn_info.setCursor(Qt.PointingHandCursor)
+        self.btn_info.setStyleSheet("background-color: #305853; color: white;")
         self.btn_limpiar = QtWidgets.QPushButton("      Limpiar      ")
         self.btn_limpiar.setObjectName("btn_limpiar")  # ID para CSS rojo
         self.btn_limpiar.setCursor(Qt.PointingHandCursor)
@@ -345,27 +336,27 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 
-        btn_row.addWidget(self.btn_cargar)
+        btn_row.addWidget(self.btn_info)
         btn_row.addWidget(sombrero)
         btn_row.addWidget(self.btn_limpiar)
         left_layout.addLayout(btn_row)
 
-
+        # --- FIN PANEL IZQUIERDO ---
         # --- PANEL DERECHO (MAPA) ---
         # Crear un contenedor para el mapa con overlay
         map_container = QtWidgets.QWidget()
         map_layout = QtWidgets.QVBoxLayout(map_container)
         map_layout.setContentsMargins(0, 0, 0, 0)
         map_layout.setSpacing(0)
-        
+
         # Caja de tiempo estimado (inicialmente oculta)
         self.time_box = QtWidgets.QLabel()
         self.time_box.setAlignment(Qt.AlignCenter)
         self.time_box.setWordWrap(True)
         self.time_box.setStyleSheet("""
             QLabel {
-                background-color: #B06821;
-                color: #511B18;
+                background-color: #511b18;
+                color: #1b2a30;
                 font-size: 18px;
                 padding: 14px 14px;
                 border-radius: 10px;
@@ -373,9 +364,9 @@ class MainWindow(QtWidgets.QMainWindow):
             }
         """)
         self.time_box.setVisible(False)  # Oculto por defecto
-        
+
         self.map = MapView()
-        
+
         # Añadir widgets al contenedor del mapa
         map_layout.addWidget(self.time_box)
         map_layout.addWidget(self.map, 1)
@@ -384,14 +375,25 @@ class MainWindow(QtWidgets.QMainWindow):
         main_layout.addWidget(left_container)
         main_layout.addWidget(map_container, 1)  # 1 = estirar mapa todo lo posible
 
-        # Barra de estado minimalista
+        # Panel de información (derecha, oculto inicialmente)
+        self.info_panel = InfoPanel(self)
+        self.info_panel.setObjectName("InfoPanel")
+        self.info_panel.setAttribute(Qt.WA_StyledBackground, True)
+        self.info_panel.hide()
+        main_layout.addWidget(self.info_panel)
+
+        # Barra de estado minimalista con texto centrado
         self.status = QtWidgets.QStatusBar()
+        self.status_label = QtWidgets.QLabel("Cada billete de metro cuesta $5 pesos")
+        self.status_label.setAlignment(Qt.AlignCenter)
+        self.status_label.setStyleSheet("color: #AAAAAA;")
+        self.status.addWidget(self.status_label, 1)  # El 1 hace que ocupe todo el espacio
         self.setStatusBar(self.status)
 
     def _connect_signals(self):
-        self.btn_cargar.clicked.connect(self.on_load_data)
         self.btn_calcular.clicked.connect(self.on_calculate)
         self.btn_limpiar.clicked.connect(self.on_clear)
+        self.btn_info.clicked.connect(self.on_clear_fields)
         self.route_requested.connect(self._handle_route_requested)
 
     # ---------- Integración (IGUAL QUE ANTES) ----------
@@ -407,10 +409,11 @@ class MainWindow(QtWidgets.QMainWindow):
         if not self._data_loader:
             return
         try:
-            stations, stations_xy, edges = self._data_loader()
+            stations, stations_xy, edges, _, _, _, _, tiempos_entrada = self._data_loader()
             self.stations_list = stations
             self.stations_xy = stations_xy
             self.edges = edges
+            self.tiempos_entrada = tiempos_entrada
 
             self.cmb_origen.clear()
             self.cmb_destino.clear()
@@ -418,7 +421,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.cmb_destino.addItems(self.stations_list)
 
             self.map.draw_network(self.stations_xy, self.edges)
-            self.status.showMessage(f"Sistema en línea • {len(stations)} estaciones operativas")
         except Exception as e:
             self.status.showMessage(f"Error: {str(e)}")
 
@@ -429,15 +431,15 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         pixmap = QtGui.QPixmap(tamano, tamano)
         pixmap.fill(Qt.transparent)
-        
+
         painter = QtGui.QPainter(pixmap)
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
-        
+
         # Dibujar círculo
         painter.setPen(Qt.NoPen)
         painter.setBrush(QColor(color_hex))
         painter.drawEllipse(0, 0, tamano, tamano)
-        
+
         painter.end()
         return QtGui.QIcon(pixmap)
 
@@ -453,7 +455,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_clear(self):
         self.steps_list.clear()
         self.lbl_resumen.setText("Esperando ruta...")
-        self.time_box.setVisible(False)  # Ocultar la caja de tiempo
+        self.last_route_result = None # Limpiar el resultado de la ruta
         self.map.draw_network(self.stations_xy, self.edges)  # Redibuja limpio
 
     @QtCore.Slot(str, str)
@@ -463,20 +465,18 @@ class MainWindow(QtWidgets.QMainWindow):
         result = self._route_finder(origen, destino)
         if not result:
             self.lbl_resumen.setText("⚠ No hay ruta disponible.")
-            self.time_box.setVisible(False)
+            self.last_route_result = None
             return
 
         # result es ahora un diccionario con 'ruta', 'distancia', y 'tiempo'
+        self.last_route_result = result # Guardamos el resultado
         ruta = result["ruta"]
         ruta_cruda = result.get("ruta_cruda", []) # Obtener ruta con sufijos _L (ej: Observatorio_L1)
         tiempo = result["tiempo"]
-        
-        # Mostrar la caja de tiempo estimado
-        self.time_box.setText(f"El tiempo estimado para llegar de {origen} a {destino} es de:\n{tiempo}")
-        self.time_box.setVisible(True)
-        
+
+
         self.steps_list.clear()
-        
+
         # Si no tenemos ruta_cruda (por compatibilidad), usamos ruta normal pero sin colores específicos
         if not ruta_cruda:
             ruta_cruda = ruta
@@ -489,26 +489,26 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # Determinar color por defecto
             color_hex = colores_lineas["Default"]
-            
+
             # Obtener nodo crudo actual (con información de línea)
             nodo_crudo = ruta_cruda[i]
-            
+
             # Lógica para detectar transbordo:
             # Si la estación actual tiene el mismo nombre simple que la anterior o la siguiente, es un transbordo
             es_transbordo = False
-            
+
             # Chequear estación anterior
             if i > 0:
                 nombre_previo = ruta[i-1]
                 if nombre_previo == nombre_estacion:
                     es_transbordo = True
-            
+
             # Chequear estación siguiente
             if i < len(ruta) - 1:
                 nombre_siguiente = ruta[i+1]
                 if nombre_siguiente == nombre_estacion:
                     es_transbordo = True
-            
+
             if es_transbordo:
                 # Si es transbordo, usamos el color naranja
                 color_hex = colores_lineas["Transfer"]
@@ -520,19 +520,19 @@ class MainWindow(QtWidgets.QMainWindow):
                         codigo_linea = "L" + partes[1]
                         # Obtener el color correspondiente a la línea
                         color_hex = colores_lineas.get(codigo_linea, colores_lineas["Default"])
-            
+
             # Crear icono con el color determinado
-            # icono = self.crear_icono_circulo(color_hex)
-            
+            icono = self.crear_icono_circulo(color_hex)
+
             # Crear item de la lista
             texto_item = f"{contador_visual}. {nombre_estacion}"
             if es_transbordo:
                 texto_item += " (Transbordo)"
-            
+
             elemento = QtWidgets.QListWidgetItem(texto_item)
             # elemento.setIcon(icono)
             self.steps_list.addItem(elemento)
-            
+
             contador_visual += 1
 
         # Calcular número de estaciones (restamos 1 porque n estaciones son n-1 tramos)
@@ -540,6 +540,28 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lbl_resumen.setText(f"✔ Ruta calculada: {num_estaciones} estaciones")
         self.map.draw_network(self.stations_xy, self.edges)
         self.map.draw_route(self.stations_xy, ruta)
+
+        # Mostrar panel de información automáticamente
+        tiempo_entrada = self.tiempos_entrada.get(origen, "Desconocido")
+        if isinstance(tiempo_entrada, (int, float)):
+            tiempo_entrada_str = f"{tiempo_entrada} min"
+        else:
+            tiempo_entrada_str = str(tiempo_entrada)
+
+        tiempo_salida = self.tiempos_entrada.get(destino, "Desconocido")
+        if isinstance(tiempo_salida, (int, float)):
+            tiempo_salida_str = f"{tiempo_salida} min"
+        else:
+            tiempo_salida_str = str(tiempo_salida)
+
+        self.info_panel.update_info(origen, destino, self.last_route_result, tiempo_entrada_str, tiempo_salida_str)
+        self.info_panel.show()
+
+    @QtCore.Slot()
+    def on_clear_fields(self):
+        """Limpia los campos de origen y destino."""
+        self.cmb_origen.setCurrentIndex(-1)
+        self.cmb_destino.setCurrentIndex(-1)
 
 
 # --------- VARIABLES GLOBALES PARA DATOS DEL METRO ---------
@@ -557,9 +579,9 @@ def load_metro_data():
     """Carga los datos del metro desde los CSV."""
     global stations_list, stations_xy, edges_list, graph, heuristics_df, station_mapping, reverse_mapping
     
-    stations_list, stations_xy, edges_list, graph, heuristics_df, station_mapping, reverse_mapping = cargar_datos()
+    stations_list, stations_xy, edges_list, graph, heuristics_df, station_mapping, reverse_mapping, tiempos_entrada = cargar_datos()
     
-    return stations_list, stations_xy, edges_list
+    return stations_list, stations_xy, edges_list, graph, heuristics_df, station_mapping, reverse_mapping, tiempos_entrada
 
 
 def find_metro_route(origen, destino):

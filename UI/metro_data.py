@@ -86,8 +86,41 @@ def cargar_datos():
     # Lista de estaciones ordenada
     stations_list = sorted(list(stations_xy.keys()))
     
+    # Cargar tiempos de entrada
+    tiempos_entrada = cargar_tiempos_entrada(directorio_root)
+
     # Usar el grafo y heurísticas de aestrella.py
-    return stations_list, stations_xy, edges_list, G_mexico, heuristicas, station_mapping, reverse_mapping
+    return stations_list, stations_xy, edges_list, G_mexico, heuristicas, station_mapping, reverse_mapping, tiempos_entrada
+
+
+def cargar_tiempos_entrada(directorio_root):
+    """
+    Carga los tiempos de entrada a las estaciones desde el CSV.
+    
+    Returns:
+        dict: Diccionario {Nombre_Estacion: Tiempo_Entrada_Minutos}
+    """
+    try:
+        df = pd.read_csv(directorio_root / "estaciones_limpias_tiempos.csv")
+        # Crear diccionario: Nombre_Estacion -> Tiempo_Entrada_Minutos
+        # Asumimos que el nombre es único o tomamos el primero si hay duplicados (generalmente es por línea)
+        # Para simplificar, usaremos el nombre simple y si hay conflicto, el promedio o el primero.
+        # Dado que el usuario pide "Desde la boca de metro de estacion origen", 
+        # y el CSV tiene "Nombre_Estacion" y "Linea", pero la UI usa nombres simples para el origen.
+        
+        tiempos = {}
+        for _, row in df.iterrows():
+            nombre = row["Nombre_Estacion"].strip()
+            tiempo = row["Tiempo_Entrada_Minutos"]
+            # Guardamos el tiempo. Si ya existe (otra línea), lo mantenemos o sobreescribimos.
+            # Lo ideal sería tener tiempos por línea, pero la UI selecciona por nombre de estación.
+            # Guardaremos el primero que encontremos para esa estación.
+            if nombre not in tiempos:
+                tiempos[nombre] = tiempo
+        return tiempos
+    except Exception as e:
+        print(f"Error cargando tiempos de entrada: {e}")
+        return {}
 
 
 def obtener_heuristica(current, target, heuristics_df):
