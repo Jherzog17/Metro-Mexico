@@ -72,7 +72,6 @@ class StationItem(QtWidgets.QGraphicsEllipseItem):
     def hoverLeaveEvent(self, event):
         self.setCursor(Qt.ArrowCursor)
         self.text_item.setVisible(False)
-        #super().hoverLeaveEvent(event)
 
 # clase para el lado derecho de la interfaz (parte del mapa)
 class MapView(QtWidgets.QGraphicsView):
@@ -580,7 +579,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # BOTONES LIMPIAR / INFO.
         btn_row = QtWidgets.QHBoxLayout()
-        self.btn_info = QtWidgets.QPushButton("Borrar campos")
+        self.btn_info = QtWidgets.QPushButton("Información")
         self.btn_info.setCursor(Qt.PointingHandCursor)
         self.btn_info.setStyleSheet("background-color: #305853; color: white;")
         self.btn_limpiar = QtWidgets.QPushButton("      Limpiar      ")
@@ -622,7 +621,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # status bar con precio
         self.status = QtWidgets.QStatusBar()
-        self.status_label = QtWidgets.QLabel("Cada billete de metro cuesta $5 pesos mexicanos")
+        self.status_label = QtWidgets.QLabel("Precio por billete: $5 pesos mexicanos")
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setStyleSheet("color: #AAAAAA;")
         self.status.addWidget(self.status_label, 1)
