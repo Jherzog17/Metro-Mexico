@@ -219,51 +219,51 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(central)
 
         # Usamos un layout horizontal sin márgenes para que se vea 'full screen'
-        main_layout = QtWidgets.QHBoxLayout(central)
-        main_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.setSpacing(0)
+        layout_principal = QtWidgets.QHBoxLayout(central)
+        layout_principal.setContentsMargins(0, 0, 0, 0)
+        layout_principal.setSpacing(0)
 
 
         # PANEL IZQUIERDO (CONTROLES)
         # creamos un widget para darle color de fondo específico
-        left_container = QtWidgets.QWidget()
-        left_container.setObjectName("SidePanel")  # asi se define en el CSS
-        left_container.setFixedWidth(350)  # definimos el ancho
+        contenedor_izquierdo = QtWidgets.QWidget()
+        contenedor_izquierdo.setObjectName("SidePanel")  # asi se define en el CSS
+        contenedor_izquierdo.setFixedWidth(350)  # definimos el ancho
 
         # añadimos un layout vertical para poder añadir widgets sobre él
-        left_layout = QtWidgets.QVBoxLayout(left_container)
-        left_layout.setContentsMargins(20, 30, 20, 30)  # margen para los widgets
-        left_layout.setSpacing(15) # espaciado entre widgets
+        layout_izquierdo = QtWidgets.QVBoxLayout(contenedor_izquierdo)
+        layout_izquierdo.setContentsMargins(20, 30, 20, 30)  # margen para los widgets
+        layout_izquierdo.setSpacing(15) # espaciado entre widgets
 
         # LOGO METRO 
         # 1. etiqueta que contendrá la imagen
-        lbl_logo = QtWidgets.QLabel()
+        etiqueta_logo = QtWidgets.QLabel()
 
         # 2. Cargamos el archivo de imagen
-        logo_path = directorio_root / "UI" / "assets" / "metro.png"
-        pixmap_logo = QtGui.QPixmap(str(logo_path))
+        ruta_logo = directorio_root / "UI" / "assets" / "metro.png"
+        pixmap_logo = QtGui.QPixmap(str(ruta_logo))
 
         # 4. Escalar la imagen.
-        scaled_pixmap = pixmap_logo.scaledToHeight(100, Qt.SmoothTransformation) # el ancho se ajusta automático segun el alto (100)
-        lbl_logo.setPixmap(scaled_pixmap)
+        pixmap_escalado = pixmap_logo.scaledToHeight(100, Qt.SmoothTransformation) # el ancho se ajusta automático segun el alto (100)
+        etiqueta_logo.setPixmap(pixmap_escalado)
 
         # 5. Centramos la imagen
-        lbl_logo.setAlignment(Qt.AlignCenter)
+        etiqueta_logo.setAlignment(Qt.AlignCenter)
 
         # 6. Añadimos la imagen al layout vertical
-        left_layout.addWidget(lbl_logo)
+        layout_izquierdo.addWidget(etiqueta_logo)
 
         # TÍTULO y SUBTÍTULO
-        title = QtWidgets.QLabel("METRO CDMX")
-        title.setStyleSheet("font-size: 24px; font-weight: 900; color: #B06821; letter-spacing: 2px;")
-        title.setAlignment(Qt.AlignCenter)
-        left_layout.addWidget(title)
+        titulo = QtWidgets.QLabel("METRO CDMX")
+        titulo.setStyleSheet("font-size: 24px; font-weight: 900; color: #B06821; letter-spacing: 2px;")
+        titulo.setAlignment(Qt.AlignCenter)
+        layout_izquierdo.addWidget(titulo)
 
 
-        subtitle = QtWidgets.QLabel("Planificador de Ruta 🇲🇽")
-        subtitle.setStyleSheet("color: #305853; font-size: 14px;")
-        subtitle.setAlignment(Qt.AlignCenter)
-        left_layout.addWidget(subtitle)
+        subtitulo = QtWidgets.QLabel("Planificador de Ruta 🇲🇽")
+        subtitulo.setStyleSheet("color: #305853; font-size: 14px;")
+        subtitulo.setAlignment(Qt.AlignCenter)
+        layout_izquierdo.addWidget(subtitulo)
 
         # CAJAS ORIGEN Y DESTINO
         self.cmb_origen = QtWidgets.QComboBox()
@@ -274,52 +274,52 @@ class MainWindow(QtWidgets.QMainWindow):
         self.cmb_destino.setEditable(True)
 
         # Configurar el icono de la flecha dorada para los ComboBox
-        flecha_path = directorio_root / "UI" / "assets" / "flecha_dorada.png"
-        icon_flecha = QtGui.QIcon(str(flecha_path))
+        ruta_flecha = directorio_root / "UI" / "assets" / "flecha_dorada.png"
+        icono_flecha = QtGui.QIcon(str(ruta_flecha))
         # Aplicar el estilo CSS con la imagen de la flecha
-        combo_style = f"""
+        estilo_combo = f"""
             QComboBox::down-arrow {{
-                image: url({str(flecha_path)});
+                image: url({str(ruta_flecha)});
                 width: 12px;
                 height: 12px;
             }}
         """
-        self.cmb_origen.setStyleSheet(self.cmb_origen.styleSheet() + combo_style)
-        self.cmb_destino.setStyleSheet(self.cmb_destino.styleSheet() + combo_style)
+        self.cmb_origen.setStyleSheet(self.cmb_origen.styleSheet() + estilo_combo)
+        self.cmb_destino.setStyleSheet(self.cmb_destino.styleSheet() + estilo_combo)
 
-        lbl_orig = QtWidgets.QLabel("ORIGEN")
-        lbl_orig.setStyleSheet("font-size: 12px; font-weight: bold; color: #305853;")
-        left_layout.addWidget(lbl_orig)
-        left_layout.addWidget(self.cmb_origen)
+        etiqueta_origen = QtWidgets.QLabel("ORIGEN")
+        etiqueta_origen.setStyleSheet("font-size: 12px; font-weight: bold; color: #305853;")
+        layout_izquierdo.addWidget(etiqueta_origen)
+        layout_izquierdo.addWidget(self.cmb_origen)
 
-        lbl_dest = QtWidgets.QLabel("DESTINO")
-        lbl_dest.setStyleSheet("font-size: 12px; font-weight: bold; color: #305853;")
-        left_layout.addWidget(lbl_dest)
-        left_layout.addWidget(self.cmb_destino)
+        etiqueta_destino = QtWidgets.QLabel("DESTINO")
+        etiqueta_destino.setStyleSheet("font-size: 12px; font-weight: bold; color: #305853;")
+        layout_izquierdo.addWidget(etiqueta_destino)
+        layout_izquierdo.addWidget(self.cmb_destino)
 
         # Botones Acción
         self.btn_calcular = QtWidgets.QPushButton("CALCULAR RUTA")
         self.btn_calcular.setCursor(Qt.PointingHandCursor)
-        left_layout.addWidget(self.btn_calcular)
+        layout_izquierdo.addWidget(self.btn_calcular)
 
         # Separador
-        line = QtWidgets.QFrame()
-        line.setFrameShape(QtWidgets.QFrame.HLine)
-        line.setStyleSheet("color: #305853;")
-        left_layout.addWidget(line)
+        linea = QtWidgets.QFrame()
+        linea.setFrameShape(QtWidgets.QFrame.HLine)
+        linea.setStyleSheet("color: #305853;")
+        layout_izquierdo.addWidget(linea)
 
         # Resultados
         self.lbl_resumen = QtWidgets.QLabel("Esperando ruta...")
         self.lbl_resumen.setStyleSheet("font-size: 14px; font-style: italic; color: #305853;")
         self.lbl_resumen.setWordWrap(True)
-        left_layout.addWidget(self.lbl_resumen)
+        layout_izquierdo.addWidget(self.lbl_resumen)
 
-        self.steps_list = QtWidgets.QListWidget()
-        left_layout.addWidget(self.steps_list)
+        self.lista_pasos = QtWidgets.QListWidget()
+        layout_izquierdo.addWidget(self.lista_pasos)
 
         # Botones secundarios
-        btn_row = QtWidgets.QHBoxLayout()
-        self.btn_info = QtWidgets.QPushButton("Borrar campos")
+        fila_botones = QtWidgets.QHBoxLayout()
+        self.btn_info = QtWidgets.QPushButton("Información")
         self.btn_info.setCursor(Qt.PointingHandCursor)
         self.btn_info.setStyleSheet("background-color: #305853; color: white;")
         self.btn_limpiar = QtWidgets.QPushButton("      Limpiar      ")
@@ -327,33 +327,33 @@ class MainWindow(QtWidgets.QMainWindow):
         self.btn_limpiar.setCursor(Qt.PointingHandCursor)
 
         sombrero = QtWidgets.QLabel()
-        sombrero_path = directorio_root / "UI" / "assets" / "sombrero.png"
-        logo_sombrero = QtGui.QPixmap(str(sombrero_path))
-        scaled_sombrero = logo_sombrero.scaledToHeight(30, Qt.SmoothTransformation)
-        sombrero.setPixmap(scaled_sombrero)
+        ruta_sombrero = directorio_root / "UI" / "assets" / "sombrero.png"
+        logo_sombrero = QtGui.QPixmap(str(ruta_sombrero))
+        sombrero_escalado = logo_sombrero.scaledToHeight(30, Qt.SmoothTransformation)
+        sombrero.setPixmap(sombrero_escalado)
         sombrero.setAlignment(Qt.AlignCenter)
 
 
 
 
-        btn_row.addWidget(self.btn_info)
-        btn_row.addWidget(sombrero)
-        btn_row.addWidget(self.btn_limpiar)
-        left_layout.addLayout(btn_row)
+        fila_botones.addWidget(self.btn_info)
+        fila_botones.addWidget(sombrero)
+        fila_botones.addWidget(self.btn_limpiar)
+        layout_izquierdo.addLayout(fila_botones)
 
         # --- FIN PANEL IZQUIERDO ---
         # --- PANEL DERECHO (MAPA) ---
         # Crear un contenedor para el mapa con overlay
-        map_container = QtWidgets.QWidget()
-        map_layout = QtWidgets.QVBoxLayout(map_container)
-        map_layout.setContentsMargins(0, 0, 0, 0)
-        map_layout.setSpacing(0)
+        contenedor_mapa = QtWidgets.QWidget()
+        layout_mapa = QtWidgets.QVBoxLayout(contenedor_mapa)
+        layout_mapa.setContentsMargins(0, 0, 0, 0)
+        layout_mapa.setSpacing(0)
 
         # Caja de tiempo estimado (inicialmente oculta)
-        self.time_box = QtWidgets.QLabel()
-        self.time_box.setAlignment(Qt.AlignCenter)
-        self.time_box.setWordWrap(True)
-        self.time_box.setStyleSheet("""
+        self.caja_tiempo = QtWidgets.QLabel()
+        self.caja_tiempo.setAlignment(Qt.AlignCenter)
+        self.caja_tiempo.setWordWrap(True)
+        self.caja_tiempo.setStyleSheet("""
             QLabel {
                 background-color: #511b18;
                 color: #1b2a30;
@@ -363,32 +363,32 @@ class MainWindow(QtWidgets.QMainWindow):
                 margin: 20px 150px;
             }
         """)
-        self.time_box.setVisible(False)  # Oculto por defecto
+        self.caja_tiempo.setVisible(False)  # Oculto por defecto
 
-        self.map = MapView()
+        self.mapa = MapView()
 
         # Añadir widgets al contenedor del mapa
-        map_layout.addWidget(self.time_box)
-        map_layout.addWidget(self.map, 1)
+        layout_mapa.addWidget(self.caja_tiempo)
+        layout_mapa.addWidget(self.mapa, 1)
 
         # Añadir al layout principal
-        main_layout.addWidget(left_container)
-        main_layout.addWidget(map_container, 1)  # 1 = estirar mapa todo lo posible
+        layout_principal.addWidget(contenedor_izquierdo)
+        layout_principal.addWidget(contenedor_mapa, 1)  # 1 = estirar mapa todo lo posible
 
         # Panel de información (derecha, oculto inicialmente)
-        self.info_panel = InfoPanel(self)
-        self.info_panel.setObjectName("InfoPanel")
-        self.info_panel.setAttribute(Qt.WA_StyledBackground, True)
-        self.info_panel.hide()
-        main_layout.addWidget(self.info_panel)
+        self.panel_info = InfoPanel(self)
+        self.panel_info.setObjectName("InfoPanel")
+        self.panel_info.setAttribute(Qt.WA_StyledBackground, True)
+        self.panel_info.hide()
+        layout_principal.addWidget(self.panel_info)
 
         # Barra de estado minimalista con texto centrado
-        self.status = QtWidgets.QStatusBar()
-        self.status_label = QtWidgets.QLabel("Cada billete de metro cuesta $5 pesos")
-        self.status_label.setAlignment(Qt.AlignCenter)
-        self.status_label.setStyleSheet("color: #AAAAAA;")
-        self.status.addWidget(self.status_label, 1)  # El 1 hace que ocupe todo el espacio
-        self.setStatusBar(self.status)
+        self.barra_estado = QtWidgets.QStatusBar()
+        self.etiqueta_estado = QtWidgets.QLabel("Cada billete de metro cuesta $5 pesos")
+        self.etiqueta_estado.setAlignment(Qt.AlignCenter)
+        self.etiqueta_estado.setStyleSheet("color: #AAAAAA;")
+        self.barra_estado.addWidget(self.etiqueta_estado, 1)  # El 1 hace que ocupe todo el espacio
+        self.setStatusBar(self.barra_estado)
 
     def _connect_signals(self):
         self.btn_calcular.clicked.connect(self.on_calculate)
@@ -420,9 +420,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.cmb_origen.addItems(self.stations_list)
             self.cmb_destino.addItems(self.stations_list)
 
-            self.map.draw_network(self.stations_xy, self.edges)
+            self.mapa.draw_network(self.stations_xy, self.edges)
         except Exception as e:
-            self.status.showMessage(f"Error: {str(e)}")
+            self.barra_estado.showMessage(f"Error: {str(e)}")
 
     def crear_icono_circulo(self, color_hex: str, tamano: int = 16) -> QtGui.QIcon:
         """
@@ -453,10 +453,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     @QtCore.Slot()
     def on_clear(self):
-        self.steps_list.clear()
+        self.lista_pasos.clear()
         self.lbl_resumen.setText("Esperando ruta...")
         self.last_route_result = None # Limpiar el resultado de la ruta
-        self.map.draw_network(self.stations_xy, self.edges)  # Redibuja limpio
+        self.mapa.draw_network(self.stations_xy, self.edges)  # Redibuja limpio
 
     @QtCore.Slot(str, str)
     def _handle_route_requested(self, origen: str, destino: str):
@@ -475,7 +475,7 @@ class MainWindow(QtWidgets.QMainWindow):
         tiempo = result["tiempo"]
 
 
-        self.steps_list.clear()
+        self.lista_pasos.clear()
 
         # Si no tenemos ruta_cruda (por compatibilidad), usamos ruta normal pero sin colores específicos
         if not ruta_cruda:
@@ -531,15 +531,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
             elemento = QtWidgets.QListWidgetItem(texto_item)
             # elemento.setIcon(icono)
-            self.steps_list.addItem(elemento)
+            self.lista_pasos.addItem(elemento)
 
             contador_visual += 1
 
         # Calcular número de estaciones (restamos 1 porque n estaciones son n-1 tramos)
         num_estaciones = len(ruta) - 1
         self.lbl_resumen.setText(f"✔ Ruta calculada: {num_estaciones} estaciones")
-        self.map.draw_network(self.stations_xy, self.edges)
-        self.map.draw_route(self.stations_xy, ruta)
+        self.mapa.draw_network(self.stations_xy, self.edges)
+        self.mapa.draw_route(self.stations_xy, ruta)
 
         # Mostrar panel de información automáticamente
         tiempo_entrada = self.tiempos_entrada.get(origen, "Desconocido")
@@ -554,14 +554,16 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             tiempo_salida_str = str(tiempo_salida)
 
-        self.info_panel.update_info(origen, destino, self.last_route_result, tiempo_entrada_str, tiempo_salida_str)
-        self.info_panel.show()
+        self.panel_info.update_info(origen, destino, self.last_route_result, tiempo_entrada_str, tiempo_salida_str)
+        self.panel_info.show()
 
     @QtCore.Slot()
     def on_clear_fields(self):
-        """Limpia los campos de origen y destino."""
-        self.cmb_origen.setCurrentIndex(-1)
-        self.cmb_destino.setCurrentIndex(-1)
+        """Alterna la visibilidad del panel de información lateral."""
+        if self.panel_info.isVisible():
+            self.panel_info.hide()
+        else:
+            self.panel_info.show()
 
 
 # --------- VARIABLES GLOBALES PARA DATOS DEL METRO ---------
