@@ -113,8 +113,6 @@ class InfoPanel(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         # Estilo del panel lateral
-        # nota: pq está esto comentaod? tuni?
-        #   self.setStyleSheet("background-color: white; border-left: 1px solid #ccc;")
         self.setFixedWidth(400) # Ancho fijo para el panel lateral
         self.layout_principal = QtWidgets.QVBoxLayout(self)
         self.layout_principal.setSpacing(10)
@@ -123,7 +121,7 @@ class InfoPanel(QtWidgets.QWidget):
         # Tiempo total
         self.lbl_total = QtWidgets.QLabel()
         self.lbl_total.setStyleSheet("font-size: 20px; font-weight: 700; color: #b06821; margin-bottom: 10px;")
-        self.lbl_total.setAlignment(Qt.AlignCenter)
+        self.lbl_total.setAlignment(Qt.AlignLeft)
         self.lbl_total.setWordWrap(True)
         self.layout_principal.addWidget(self.lbl_total)
         
@@ -153,7 +151,7 @@ class InfoPanel(QtWidgets.QWidget):
                 font-weight: bold;
             }
             QPushButton:hover {
-                background-color: #406863;
+                background-color: #305853;
             }
         """)
         self.btn_cerrar.clicked.connect(self.hide)
@@ -169,7 +167,7 @@ class InfoPanel(QtWidgets.QWidget):
                 
         # Actualizar Header
         tiempo_total = resultado_ruta["tiempo"]
-        self.lbl_total.setText(f"Tiempo total: {tiempo_total}")
+        self.lbl_total.setText(f"    🌮    Tiempo total: {tiempo_total}")
         
         ruta = resultado_ruta["ruta"]
         ruta_cruda = resultado_ruta.get("ruta_cruda", [])

@@ -12,7 +12,7 @@ colores_lineas = {
     "LA": "#9B26B6",       # Morado
     "LB": "#A7A8AA",       # Gris
     "L12": "#C6AA76",      # Beige
-    "Transfer": "#305853", # teal para transbordo
+    "Transfer": "#666666", # gris para transbordo
     "Default": "#AAAAAA",
     "Entry": "#000000"     # Negro para entrada
 }

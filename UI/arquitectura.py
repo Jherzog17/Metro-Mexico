@@ -3,7 +3,7 @@ import sys
 import os
 import math
 from pathlib import Path
-from typing import Callable, Dict, List, Tuple, Optional
+from typing import Callable, Dict, List, Tuple
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import QPointF, Qt
 from PySide6.QtGui import QPolygonF, QBrush, QColor, QPen, QPainter
@@ -16,7 +16,6 @@ directorio_root = Path(__file__).parent.parent.resolve()
 
 
 #  FUNCIÓN PARA CARGAR ESTILOS CSS jorge
-
 
 def cargar_estilos():
     """Carga los estilos CSS desde el archivo externo estilos.css"""
@@ -96,9 +95,6 @@ class MapView(QtWidgets.QGraphicsView):
         self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         # que el zoom no sea al centro sino a donde esta el raton
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
-        # que al redimensionar la ventana, lo que está debajo del raton siga ahi
-        # nota: podemos probar a ver como se ve quitando esto pq no entiendo muy biwn quw hace
-        self.setResizeAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
 
         # Quitamos los bordes blancos, que no haya margen
         self.setFrameShape(QtWidgets.QFrame.NoFrame)
@@ -348,16 +344,13 @@ class MainWindow(QtWidgets.QMainWindow):
         # Crear un contenedor para el mapa
         map_container = QtWidgets.QWidget()
         map_layout = QtWidgets.QVBoxLayout(map_container)
-        # nota: confirmar con zoom que esto se pueda quitar
-        # map_layout.setContentsMargins(0, 0, 0, 0)
-        # map_layout.setSpacing(0)
 
         self.map = MapView()
         map_layout.addWidget(self.map, 1)
 
         # Añadir al layout principal
         main_layout.addWidget(left_container)
-        main_layout.addWidget(map_container)
+        main_layout.addWidget(map_container, 1)
 
         # Panel de información derecho, oculto inicialmente
         self.info_panel = InfoPanel(self)
@@ -446,7 +439,7 @@ class MainWindow(QtWidgets.QMainWindow):
         result = self._route_finder(origen, destino)
         if not result:
             self.lbl_resumen.setText("⚠ No hay ruta disponible.")
-            self.last_route_result = None # nota: igual esta linea se podria quitar
+            self.last_route_result = None
             return
 
         # result es ahora un diccionario con 'ruta', 'distancia', y 'tiempo'
@@ -509,7 +502,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Calcular número de estaciones (restamos nº de transbordos pq es la misma estacion)
         num_estaciones = len(ruta) - num_transbordos
-        self.lbl_resumen.setText(f"✔ Ruta calculada: {num_estaciones} estaciones")
+        self.lbl_resumen.setText(f"🦅 Ruta calculada: {num_estaciones} estaciones")
         self.map.draw_network(self.stations_xy, self.edges)
         self.map.draw_route(self.stations_xy, ruta)
 
