@@ -1,6 +1,6 @@
 # Metro CDMX - Práctica IA
 
-En esta practica hemos creado una aplicación que determina la ruta en metro más corta desde una estación a otra. Esta aplicación utiliza el algoritmo A* para determinar esta ruta más óptima.
+En esta práctica hemos creado una aplicación que determina la ruta en metro más corta desde una estación a otra. Esta aplicación utiliza el algoritmo A* para determinar esta ruta más óptima.
 
 ## Cómo Ejecutar la Aplicación
 
